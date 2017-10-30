@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<?xml-stylesheet type="text/xsl" href="callbacks.xsl"?>
+
+<plugin name="BlueZero" short-name="B0" author="federico.ferri.it@gmail.com">
+    <description>BlueZero plugin for V-REP.</description>
+    <command name="createNode">
+        <description>Create a new node.</description>
+        <categories>
+            <category name="node" />
+        </categories>
+        <params>
+            <param name="name" type="string">
+                <description>name of the node (will be changed if not unique; check return value)</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int" default="-1">
+                <description>a handle to the new node</description>
+            </param>
+            <param name="name" type="string">
+                <description>final name of the node as assigned from resolver node</description>
+            </param>
+        </return>
+    </command>
+    <command name="initNode">
+        <description>Initialize a node.</description>
+        <categories>
+            <category name="node" />
+        </categories>
+        <params>
+            <param name="handle" type="int">
+                <description>node handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="cleanupNode">
+        <description>Cleanup a node.</description>
+        <categories>
+            <category name="node" />
+        </categories>
+        <params>
+            <param name="handle" type="int">
+                <description>node handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="destroyNode">
+        <description>Destroy a node.</description>
+        <categories>
+            <category name="node" />
+        </categories>
+        <params>
+            <param name="handle" type="int">
+                <description>node handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="createPublisher">
+        <description>Create a new publisher.</description>
+        <categories>
+            <category name="topic" />
+        </categories>
+        <params>
+            <param name="nodeHandle" type="int">
+                <description>node handle</description>
+            </param>
+            <param name="topic" type="string">
+                <description>topic name</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int" default="-1">
+                <description>a handle to the new publisher</description>
+            </param>
+        </return>
+    </command>
+    <command name="destroyPublisher">
+        <description>Destroy a publisher.</description>
+        <categories>
+            <category name="topic" />
+        </categories>
+        <params>
+            <param name="handle" type="int">
+                <description>publisher handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="createSubscriber">
+        <description>Create a new subscriber.</description>
+        <categories>
+            <category name="topic" />
+        </categories>
+        <params>
+            <param name="nodeHandle" type="int">
+                <description>node handle</description>
+            </param>
+            <param name="topic" type="string">
+                <description>topic name</description>
+            </param>
+            <param name="callback" type="string" default="">
+                <description>lua calback to call when a message is received</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int" default="-1">
+                <description>a handle to the new subscriber</description>
+            </param>
+        </return>
+    </command>
+    <command name="destroySubscriber">
+        <description>Destroy a subscriber.</description>
+        <categories>
+            <category name="topic" />
+        </categories>
+        <params>
+            <param name="handle" type="int">
+                <description>subscriber handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="createServiceClient">
+        <description>Create a new service client.</description>
+        <categories>
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="nodeHandle" type="int">
+                <description>node handle</description>
+            </param>
+            <param name="service" type="string">
+                <description>service name</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int" default="-1">
+                <description>a handle to the new service client</description>
+            </param>
+        </return>
+    </command>
+    <command name="destroyServiceClient">
+        <description>Destroy a service client.</description>
+        <categories>
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="handle" type="int">
+                <description>service client handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="createServiceServer">
+        <description>Create a new service server.</description>
+        <categories>
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="nodeHandle" type="int">
+                <description>node handle</description>
+            </param>
+            <param name="service" type="string">
+                <description>service name</description>
+            </param>
+            <param name="callback" type="string" default="">
+                <description>lua calback to call when a request is received</description>
+            </param>
+        </params>
+        <return>
+            <param name="handle" type="int" default="-1">
+                <description>a handle to the new service server</description>
+            </param>
+        </return>
+    </command>
+    <command name="destroyServiceServer">
+        <description>Destroy a service server.</description>
+        <categories>
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="handle" type="int">
+                <description>service server handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <script-function name="topicCallback">
+        <description>Callback for a subscriber.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>subscriber handle</description>
+            </param>
+            <param name="topic" type="string">
+                <description>topic name</description>
+            </param>
+            <param name="payload" type="string">
+                <description>raw payload</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </script-function>
+    <script-function name="serviceCallback">
+        <description>Callback for a service server.</description>
+        <params>
+            <param name="handle" type="int">
+                <description>subscriber handle</description>
+            </param>
+            <param name="service" type="string">
+                <description>service name</description>
+            </param>
+            <param name="payload" type="string">
+                <description>raw request payload</description>
+            </param>
+        </params>
+        <return>
+            <param name="payload" type="string">
+                <description>raw response payload</description>
+            </param>
+        </return>
+    </script-function>
+</plugin>
