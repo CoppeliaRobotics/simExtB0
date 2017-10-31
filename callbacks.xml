@@ -3,58 +3,84 @@
 
 <plugin name="BlueZero" short-name="B0" author="federico.ferri.it@gmail.com">
     <description>BlueZero plugin for V-REP.</description>
-    <command name="createNode">
+    <command name="create">
         <description>Create a new node.</description>
         <categories>
             <category name="node" />
         </categories>
         <params>
             <param name="name" type="string">
-                <description>name of the node (will be changed if not unique; check return value)</description>
+                <description>name of the node (will be changed if not unique during initialization)</description>
             </param>
         </params>
         <return>
-            <param name="handle" type="int" default="-1">
+            <param name="handle" type="string" default="">
                 <description>a handle to the new node</description>
-            </param>
-            <param name="name" type="string">
-                <description>final name of the node as assigned from resolver node</description>
             </param>
         </return>
     </command>
-    <command name="initNode">
+    <command name="init">
         <description>Initialize a node.</description>
         <categories>
             <category name="node" />
         </categories>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
+                <description>node handle</description>
+            </param>
+        </params>
+        <return>
+            <param name="name" type="string">
+                <description>final name of the node as assigned from resolver node</description>
+            </param>
+        </return>
+    </command>
+    <command name="spin">
+        <description>Spin a node.</description>
+        <categories>
+            <category name="node" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
                 <description>node handle</description>
             </param>
         </params>
         <return>
         </return>
     </command>
-    <command name="cleanupNode">
+    <command name="spinOnce">
+        <description>Spin a node.</description>
+        <categories>
+            <category name="node" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>node handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="cleanup">
         <description>Cleanup a node.</description>
         <categories>
             <category name="node" />
         </categories>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>node handle</description>
             </param>
         </params>
         <return>
         </return>
     </command>
-    <command name="destroyNode">
+    <command name="destroy">
         <description>Destroy a node.</description>
         <categories>
             <category name="node" />
         </categories>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>node handle</description>
             </param>
         </params>
@@ -67,7 +93,7 @@
             <category name="topic" />
         </categories>
         <params>
-            <param name="nodeHandle" type="int">
+            <param name="nodeHandle" type="string">
                 <description>node handle</description>
             </param>
             <param name="topic" type="string">
@@ -75,9 +101,25 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int" default="-1">
+            <param name="handle" type="string" default="-1">
                 <description>a handle to the new publisher</description>
             </param>
+        </return>
+    </command>
+    <command name="publish">
+        <description>Publish some data.</description>
+        <categories>
+            <category name="topic" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>publisher handle</description>
+            </param>
+            <param name="payload" type="string">
+                <description>message payload</description>
+            </param>
+        </params>
+        <return>
         </return>
     </command>
     <command name="destroyPublisher">
@@ -86,7 +128,7 @@
             <category name="topic" />
         </categories>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>publisher handle</description>
             </param>
         </params>
@@ -99,7 +141,7 @@
             <category name="topic" />
         </categories>
         <params>
-            <param name="nodeHandle" type="int">
+            <param name="nodeHandle" type="string">
                 <description>node handle</description>
             </param>
             <param name="topic" type="string">
@@ -110,7 +152,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int" default="-1">
+            <param name="handle" type="string" default="">
                 <description>a handle to the new subscriber</description>
             </param>
         </return>
@@ -121,7 +163,7 @@
             <category name="topic" />
         </categories>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>subscriber handle</description>
             </param>
         </params>
@@ -134,7 +176,7 @@
             <category name="service" />
         </categories>
         <params>
-            <param name="nodeHandle" type="int">
+            <param name="nodeHandle" type="string">
                 <description>node handle</description>
             </param>
             <param name="service" type="string">
@@ -142,8 +184,27 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int" default="-1">
+            <param name="handle" type="string" default="">
                 <description>a handle to the new service client</description>
+            </param>
+        </return>
+    </command>
+    <command name="call">
+        <description>Call a service.</description>
+        <categories>
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>service client handle</description>
+            </param>
+            <param name="payload" type="string">
+                <description>request payload</description>
+            </param>
+        </params>
+        <return>
+            <param name="payload" type="string">
+                <description>response payload</description>
             </param>
         </return>
     </command>
@@ -153,7 +214,7 @@
             <category name="service" />
         </categories>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>service client handle</description>
             </param>
         </params>
@@ -166,7 +227,7 @@
             <category name="service" />
         </categories>
         <params>
-            <param name="nodeHandle" type="int">
+            <param name="nodeHandle" type="string">
                 <description>node handle</description>
             </param>
             <param name="service" type="string">
@@ -177,7 +238,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="int" default="-1">
+            <param name="handle" type="string" default="">
                 <description>a handle to the new service server</description>
             </param>
         </return>
@@ -188,7 +249,7 @@
             <category name="service" />
         </categories>
         <params>
-            <param name="handle" type="int">
+            <param name="handle" type="string">
                 <description>service server handle</description>
             </param>
         </params>
@@ -198,9 +259,6 @@
     <script-function name="topicCallback">
         <description>Callback for a subscriber.</description>
         <params>
-            <param name="handle" type="int">
-                <description>subscriber handle</description>
-            </param>
             <param name="topic" type="string">
                 <description>topic name</description>
             </param>
@@ -214,12 +272,6 @@
     <script-function name="serviceCallback">
         <description>Callback for a service server.</description>
         <params>
-            <param name="handle" type="int">
-                <description>subscriber handle</description>
-            </param>
-            <param name="service" type="string">
-                <description>service name</description>
-            </param>
             <param name="payload" type="string">
                 <description>raw request payload</description>
             </param>
