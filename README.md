@@ -1,4 +1,4 @@
-# Bl;ueZero plugin for V-REP
+# BlueZero plugin for V-REP
 
 ### Compiling
 
