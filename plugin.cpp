@@ -46,10 +46,10 @@ template<typename T>
 static int crc_ptr(const T *t)
 {
     auto x = reinterpret_cast<long long int>(t);
-    x = x ^ (x << 32);
-    x = x ^ (x << 16);
-    x = x ^ (x << 8);
-    x = x ^ (x << 4);
+    x = x ^ (x >> 32);
+    x = x ^ (x >> 16);
+    x = x ^ (x >> 8);
+    x = x ^ (x >> 4);
     x = x & 0x000000000000000F;
     x = x ^ 0x0000000000000008;
     return int(x);
