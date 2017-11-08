@@ -219,6 +219,28 @@ void destroyServiceServer(SScriptCallBack *p, const char *cmd, destroyServiceSer
     delete psrv;
 }
 
+void setCompression(SScriptCallBack *p, const char *cmd, setCompression_in *in, setCompression_out *out)
+{
+    auto *ppub = PubHandle::obj(in->handle);
+    if(ppub)
+    {
+        ppub->setCompression(in->compression_algorithm, in->compression_level);
+        return;
+    }
+    auto *pcli = CliHandle::obj(in->handle);
+    if(pcli)
+    {
+        pcli->setCompression(in->compression_algorithm, in->compression_level);
+        return;
+    }
+    auto *psrv = SrvHandle::obj(in->handle);
+    if(psrv)
+    {
+        psrv->setCompression(in->compression_algorithm, in->compression_level);
+        return;
+    }
+}
+
 class Plugin : public vrep::Plugin
 {
 public:
