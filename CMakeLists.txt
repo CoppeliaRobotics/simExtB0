@@ -10,7 +10,6 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 find_package(Boost REQUIRED COMPONENTS thread system regex filesystem)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-find_package(ZMQ 4.1.4 REQUIRED)
 find_package(VREP REQUIRED)
 find_package(BlueZero REQUIRED)
 
@@ -31,5 +30,5 @@ add_library(v_repExtBlueZero
     ${CMAKE_BINARY_DIR}/generated/stubs.cpp
     ${VREP_EXPORTED_SOURCES}
 )
-target_link_libraries(v_repExtBlueZero ${Boost_LIBRARIES} ${VREP_LIBRARIES} ${ZMQ_LIBRARY} ${BLUEZERO_LIBRARIES})
+target_link_libraries(v_repExtBlueZero ${Boost_LIBRARIES} ${VREP_LIBRARIES} ${BLUEZERO_LIBRARIES})
 
