@@ -13,12 +13,11 @@
 #include "config.h"
 #include <b0/b0.h>
 
-// we use only raw (std::string) b0 sockets here:
 using Node = b0::Node;
-using Publisher = b0::Publisher<std::string, true>;
-using Subscriber = b0::Subscriber<std::string, true>;
-using ServiceClient = b0::ServiceClient<std::string, std::string, true>;
-using ServiceServer = b0::ServiceServer<std::string, std::string, true>;
+using Publisher = b0::Publisher<std::string>;
+using Subscriber = b0::Subscriber<std::string>;
+using ServiceClient = b0::ServiceClient<std::string, std::string>;
+using ServiceServer = b0::ServiceServer<std::string, std::string>;
 
 // handle: a tool for pointer <--> string conversion
 template<typename T>
@@ -68,10 +67,9 @@ template<> std::string Handle<Subscriber>::tag() { return "b0.sub"; }
 template<> std::string Handle<ServiceClient>::tag() { return "b0.cli"; }
 template<> std::string Handle<ServiceServer>::tag() { return "b0.srv"; }
 
-void topicCallbackWrapper(int scriptID, std::string callback, std::string topic, const std::string &payload)
+void topicCallbackWrapper(int scriptID, std::string callback, const std::string &payload)
 {
     topicCallback_in in;
-    in.topic = topic;
     in.payload = payload;
     topicCallback_out out;
     topicCallback(scriptID, callback.c_str(), &in, &out);
@@ -145,7 +143,7 @@ void destroyPublisher(SScriptCallBack *p, const char *cmd, destroyPublisher_in *
 void createSubscriber(SScriptCallBack *p, const char *cmd, createSubscriber_in *in, createSubscriber_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
-    auto callback = boost::bind(topicCallbackWrapper, p->scriptID, in->callback, _1, _2);
+    auto callback = boost::bind(topicCallbackWrapper, p->scriptID, in->callback, _1);
     auto *psub = new Subscriber(pnode, in->topic, callback);
     out->handle = Handle<Subscriber>::str(psub);
 }

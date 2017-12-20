@@ -279,9 +279,6 @@
     <script-function name="topicCallback">
         <description>Callback for a subscriber.</description>
         <params>
-            <param name="topic" type="string">
-                <description>topic name</description>
-            </param>
             <param name="payload" type="string">
                 <description>raw payload</description>
             </param>
