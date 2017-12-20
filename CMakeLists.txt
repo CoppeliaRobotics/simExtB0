@@ -7,6 +7,16 @@ set(CMAKE_MACOSX_RPATH 1)
 
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DDEBUG")
 
+if(WIN32)
+    set(Boost_USE_STATIC_LIBS OFF)
+    set(Boost_USE_MULTITHREADED ON)
+    set(Boost_USE_STATIC_RUNTIME OFF)
+    add_definitions(-DBOOST_ALL_NO_LIB)
+    add_definitions(-DWIN32_LEAN_AND_MEAN)
+    add_definitions(-DBOOST_USE_WINDOWS_H)
+    add_definitions(-DNOMINMAX)
+endif()
+
 find_package(Boost REQUIRED COMPONENTS thread system regex filesystem)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
