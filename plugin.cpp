@@ -90,6 +90,12 @@ void create(SScriptCallBack *p, const char *cmd, create_in *in, create_out *out)
     out->handle = Handle<Node>::str(pnode);
 }
 
+void setAnnounceTimeout(SScriptCallBack *p, const char *cmd, setAnnounceTimeout_in *in, setAnnounceTimeout_out *out)
+{
+    auto *pnode = Handle<Node>::obj(in->handle);
+    pnode->setAnnounceTimeout(in->timeout);
+}
+
 void init(SScriptCallBack *p, const char *cmd, init_in *in, init_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);

@@ -19,6 +19,22 @@
             </param>
         </return>
     </command>
+    <command name="setAnnounceTimeout">
+        <description>Set the announceNode timeout.</description>
+        <categories>
+            <category name="node" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>node handle</description>
+            </param>
+            <param name="timeout" type="int">
+                <description>timeout in milliseconds, or -1 for no timeout</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <command name="init">
         <description>Initialize a node.</description>
         <categories>
