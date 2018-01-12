@@ -292,6 +292,35 @@
         <return>
         </return>
     </command>
+    <command name="setSocketOption">
+        <description>Set a low-level socket option. Available options:
+            <ul>
+                <li>lingerPeriod</li>
+                <li>backlog</li>
+                <li>readTimeout</li>
+                <li>writeTimeout</li>
+                <li>immediate</li>
+                <li>conflate</li>
+                <li>readHWM</li>
+                <li>writeHWM</li>
+            </ul>
+        </description>
+        <categories>
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>socket handle</description>
+            </param>
+            <param name="option" type="string">
+                <description>option key.</description>
+            </param>
+            <param name="value" type="int">
+                <description>option value.</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <script-function name="topicCallback">
         <description>Callback for a subscriber.</description>
         <params>

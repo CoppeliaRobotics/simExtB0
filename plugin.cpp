@@ -215,6 +215,27 @@ void setCompression(SScriptCallBack *p, const char *cmd, setCompression_in *in, 
     }
 }
 
+void setSocketOption(SScriptCallBack *p, const char *cmd, setSocketOption_in *in, setSocketOption_out *out)
+{
+    b0::socket::Socket *socket = nullptr;
+    if(auto *ppub = Handle<Publisher>::obj(in->handle)) socket = ppub;
+    else if(auto *psub = Handle<Subscriber>::obj(in->handle)) socket = psub;
+    else if(auto *pcli = Handle<ServiceClient>::obj(in->handle)) socket = pcli;
+    else if(auto *psrv = Handle<ServiceServer>::obj(in->handle)) socket = psrv;
+    else throw std::string("invalid socket type");
+
+    int v = in->value;
+    if(in->option == "lingerPeriod") socket->setLingerPeriod(v);
+    else if(in->option == "backlog") socket->setBacklog(v);
+    else if(in->option == "readTimeout") socket->setReadTimeout(v);
+    else if(in->option == "writeTimeout") socket->setWriteTimeout(v);
+    else if(in->option == "immediate") socket->setImmediate(v);
+    else if(in->option == "conflate") socket->setConflate(v);
+    else if(in->option == "readHWM") socket->setReadHWM(v);
+    else if(in->option == "writeHWM") socket->setWriteHWM(v);
+    else throw (boost::format("invalid option: '%s'") % in->option).str();
+}
+
 class Plugin : public vrep::Plugin
 {
 public:
