@@ -331,4 +331,16 @@
             </param>
         </return>
     </script-function>
+    <command name="getHandles">
+        <description>Return a list of active handles</description>
+        <categories>
+        </categories>
+        <params>
+        </params>
+        <return>
+            <param name="handles" type="table" item-type="string">
+                <description>list of handles.</description>
+            </param>
+        </return>
+    </command>
 </plugin>

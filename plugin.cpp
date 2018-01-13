@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <set>
 #include <map>
 #include <stdexcept>
 #include <boost/format.hpp>
@@ -12,6 +13,8 @@
 #include "stubs.h"
 #include "config.h"
 #include <b0/b0.h>
+
+std::set<std::string> handles;
 
 using Node = b0::Node;
 using Publisher = b0::Publisher<std::string>;
@@ -103,6 +106,7 @@ void create(SScriptCallBack *p, const char *cmd, create_in *in, create_out *out)
     pnode->setUserData(meta);
 
     out->handle = meta->handle;
+    handles.insert(meta->handle);
 }
 
 void setAnnounceTimeout(SScriptCallBack *p, const char *cmd, setAnnounceTimeout_in *in, setAnnounceTimeout_out *out)
@@ -133,7 +137,11 @@ void cleanup(SScriptCallBack *p, const char *cmd, cleanup_in *in, cleanup_out *o
 void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
-    delete Metadata::get(pnode);
+
+    auto *meta = Metadata::get(pnode);
+    handles.erase(meta->handle);
+    delete meta;
+
     delete pnode;
 }
 
@@ -147,6 +155,7 @@ void createPublisher(SScriptCallBack *p, const char *cmd, createPublisher_in *in
     ppub->setUserData(meta);
 
     out->handle = meta->handle;
+    handles.insert(meta->handle);
 }
 
 void publish(SScriptCallBack *p, const char *cmd, publish_in *in, publish_out *out)
@@ -158,7 +167,11 @@ void publish(SScriptCallBack *p, const char *cmd, publish_in *in, publish_out *o
 void destroyPublisher(SScriptCallBack *p, const char *cmd, destroyPublisher_in *in, destroyPublisher_out *out)
 {
     auto *ppub = Handle<Publisher>::obj(in->handle);
-    delete Metadata::get(ppub);
+
+    auto *meta = Metadata::get(ppub);
+    handles.erase(meta->handle);
+    delete meta;
+
     delete ppub;
 }
 
@@ -173,12 +186,17 @@ void createSubscriber(SScriptCallBack *p, const char *cmd, createSubscriber_in *
     psub->setUserData(meta);
 
     out->handle = meta->handle;
+    handles.insert(meta->handle);
 }
 
 void destroySubscriber(SScriptCallBack *p, const char *cmd, destroySubscriber_in *in, destroySubscriber_out *out)
 {
     auto *psub = Handle<Subscriber>::obj(in->handle);
-    delete Metadata::get(psub);
+
+    auto *meta = Metadata::get(psub);
+    handles.erase(meta->handle);
+    delete meta;
+
     delete psub;
 }
 
@@ -192,6 +210,7 @@ void createServiceClient(SScriptCallBack *p, const char *cmd, createServiceClien
     pcli->setUserData(meta);
 
     out->handle = meta->handle;
+    handles.insert(meta->handle);
 }
 
 void call(SScriptCallBack *p, const char *cmd, call_in *in, call_out *out)
@@ -203,7 +222,11 @@ void call(SScriptCallBack *p, const char *cmd, call_in *in, call_out *out)
 void destroyServiceClient(SScriptCallBack *p, const char *cmd, destroyServiceClient_in *in, destroyServiceClient_out *out)
 {
     auto *pcli = Handle<ServiceClient>::obj(in->handle);
-    delete Metadata::get(pcli);
+
+    auto *meta = Metadata::get(pcli);
+    handles.erase(meta->handle);
+    delete meta;
+
     delete pcli;
 }
 
@@ -218,12 +241,17 @@ void createServiceServer(SScriptCallBack *p, const char *cmd, createServiceServe
     psrv->setUserData(meta);
 
     out->handle = meta->handle;
+    handles.insert(meta->handle);
 }
 
 void destroyServiceServer(SScriptCallBack *p, const char *cmd, destroyServiceServer_in *in, destroyServiceServer_out *out)
 {
     auto *psrv = Handle<ServiceServer>::obj(in->handle);
-    delete Metadata::get(psrv);
+
+    auto *meta = Metadata::get(psrv);
+    handles.erase(meta->handle);
+    delete meta;
+
     delete psrv;
 }
 
@@ -268,6 +296,12 @@ void setSocketOption(SScriptCallBack *p, const char *cmd, setSocketOption_in *in
     else if(in->option == "readHWM") socket->setReadHWM(v);
     else if(in->option == "writeHWM") socket->setWriteHWM(v);
     else throw (boost::format("invalid option: '%s'") % in->option).str();
+}
+
+void getHandles(SScriptCallBack *p, const char *cmd, getHandles_in *in, getHandles_out *out)
+{
+    for(const std::string &handle : handles)
+        out->handles.push_back(handle);
 }
 
 class Plugin : public vrep::Plugin
