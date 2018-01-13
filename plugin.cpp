@@ -67,6 +67,16 @@ template<> std::string Handle<Subscriber>::tag() { return "b0.sub"; }
 template<> std::string Handle<ServiceClient>::tag() { return "b0.cli"; }
 template<> std::string Handle<ServiceServer>::tag() { return "b0.srv"; }
 
+struct Metadata
+{
+    std::string handle;
+
+    static Metadata * get(b0::UserData *x)
+    {
+        return reinterpret_cast<Metadata*>(x->getUserData());
+    }
+};
+
 void topicCallbackWrapper(int scriptID, std::string callback, const std::string &payload)
 {
     topicCallback_in in;
@@ -87,7 +97,12 @@ void serviceCallbackWrapper(int scriptID, std::string callback, const std::strin
 void create(SScriptCallBack *p, const char *cmd, create_in *in, create_out *out)
 {
     auto *pnode = new Node(in->name);
-    out->handle = Handle<Node>::str(pnode);
+
+    auto *meta = new Metadata;
+    meta->handle = Handle<Node>::str(pnode);
+    pnode->setUserData(meta);
+
+    out->handle = meta->handle;
 }
 
 void setAnnounceTimeout(SScriptCallBack *p, const char *cmd, setAnnounceTimeout_in *in, setAnnounceTimeout_out *out)
@@ -124,6 +139,7 @@ void cleanup(SScriptCallBack *p, const char *cmd, cleanup_in *in, cleanup_out *o
 void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
+    delete Metadata::get(pnode);
     delete pnode;
 }
 
@@ -131,7 +147,12 @@ void createPublisher(SScriptCallBack *p, const char *cmd, createPublisher_in *in
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     auto *ppub = new Publisher(pnode, in->topic);
-    out->handle = Handle<Publisher>::str(ppub);
+
+    auto *meta = new Metadata;
+    meta->handle = Handle<Publisher>::str(ppub);
+    ppub->setUserData(meta);
+
+    out->handle = meta->handle;
 }
 
 void publish(SScriptCallBack *p, const char *cmd, publish_in *in, publish_out *out)
@@ -143,6 +164,7 @@ void publish(SScriptCallBack *p, const char *cmd, publish_in *in, publish_out *o
 void destroyPublisher(SScriptCallBack *p, const char *cmd, destroyPublisher_in *in, destroyPublisher_out *out)
 {
     auto *ppub = Handle<Publisher>::obj(in->handle);
+    delete Metadata::get(ppub);
     delete ppub;
 }
 
@@ -151,12 +173,18 @@ void createSubscriber(SScriptCallBack *p, const char *cmd, createSubscriber_in *
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     auto callback = boost::bind(topicCallbackWrapper, p->scriptID, in->callback, _1);
     auto *psub = new Subscriber(pnode, in->topic, callback);
-    out->handle = Handle<Subscriber>::str(psub);
+
+    auto *meta = new Metadata;
+    meta->handle = Handle<Subscriber>::str(psub);
+    psub->setUserData(meta);
+
+    out->handle = meta->handle;
 }
 
 void destroySubscriber(SScriptCallBack *p, const char *cmd, destroySubscriber_in *in, destroySubscriber_out *out)
 {
     auto *psub = Handle<Subscriber>::obj(in->handle);
+    delete Metadata::get(psub);
     delete psub;
 }
 
@@ -164,7 +192,12 @@ void createServiceClient(SScriptCallBack *p, const char *cmd, createServiceClien
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     auto *pcli = new ServiceClient(pnode, in->service);
-    out->handle = Handle<ServiceClient>::str(pcli);
+
+    auto *meta = new Metadata;
+    meta->handle = Handle<ServiceClient>::str(pcli);
+    pcli->setUserData(meta);
+
+    out->handle = meta->handle;
 }
 
 void call(SScriptCallBack *p, const char *cmd, call_in *in, call_out *out)
@@ -176,6 +209,7 @@ void call(SScriptCallBack *p, const char *cmd, call_in *in, call_out *out)
 void destroyServiceClient(SScriptCallBack *p, const char *cmd, destroyServiceClient_in *in, destroyServiceClient_out *out)
 {
     auto *pcli = Handle<ServiceClient>::obj(in->handle);
+    delete Metadata::get(pcli);
     delete pcli;
 }
 
@@ -184,12 +218,18 @@ void createServiceServer(SScriptCallBack *p, const char *cmd, createServiceServe
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     auto callback = boost::bind(serviceCallbackWrapper, p->scriptID, in->callback, _1, _2);
     auto *psrv = new ServiceServer(pnode, in->service, callback);
-    out->handle = Handle<ServiceServer>::str(psrv);
+
+    auto *meta = new Metadata;
+    meta->handle = Handle<ServiceServer>::str(psrv);
+    psrv->setUserData(meta);
+
+    out->handle = meta->handle;
 }
 
 void destroyServiceServer(SScriptCallBack *p, const char *cmd, destroyServiceServer_in *in, destroyServiceServer_out *out)
 {
     auto *psrv = Handle<ServiceServer>::obj(in->handle);
+    delete Metadata::get(psrv);
     delete psrv;
 }
 
