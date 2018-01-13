@@ -51,19 +51,6 @@
             </param>
         </return>
     </command>
-    <command name="spin">
-        <description>Spin a node.</description>
-        <categories>
-            <category name="node" />
-        </categories>
-        <params>
-            <param name="handle" type="string">
-                <description>node handle</description>
-            </param>
-        </params>
-        <return>
-        </return>
-    </command>
     <command name="spinOnce">
         <description>Spin a node.</description>
         <categories>

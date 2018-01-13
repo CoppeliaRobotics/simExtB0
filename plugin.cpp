@@ -118,12 +118,6 @@ void init(SScriptCallBack *p, const char *cmd, init_in *in, init_out *out)
     out->name = pnode->getName();
 }
 
-void spin(SScriptCallBack *p, const char *cmd, spin_in *in, spin_out *out)
-{
-    auto *pnode = Handle<Node>::obj(in->handle);
-    pnode->spin();
-}
-
 void spinOnce(SScriptCallBack *p, const char *cmd, spinOnce_in *in, spinOnce_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
