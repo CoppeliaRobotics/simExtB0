@@ -17,10 +17,10 @@
 std::set<std::string> handles;
 
 using Node = b0::Node;
-using Publisher = b0::Publisher<std::string>;
-using Subscriber = b0::Subscriber<std::string>;
-using ServiceClient = b0::ServiceClient<std::string, std::string>;
-using ServiceServer = b0::ServiceServer<std::string, std::string>;
+using Publisher = b0::Publisher;
+using Subscriber = b0::Subscriber;
+using ServiceClient = b0::ServiceClient;
+using ServiceServer = b0::ServiceServer;
 
 // handle: a tool for pointer <--> string conversion
 template<typename T>
@@ -279,7 +279,7 @@ void setCompression(SScriptCallBack *p, const char *cmd, setCompression_in *in, 
 
 void setSocketOption(SScriptCallBack *p, const char *cmd, setSocketOption_in *in, setSocketOption_out *out)
 {
-    b0::socket::Socket *socket = nullptr;
+    b0::Socket *socket = nullptr;
     if(auto *ppub = Handle<Publisher>::obj(in->handle)) socket = ppub;
     else if(auto *psub = Handle<Subscriber>::obj(in->handle)) socket = psub;
     else if(auto *pcli = Handle<ServiceClient>::obj(in->handle)) socket = pcli;
