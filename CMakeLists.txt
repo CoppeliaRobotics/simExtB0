@@ -20,7 +20,6 @@ endif()
 find_package(Boost REQUIRED COMPONENTS thread system regex filesystem)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-find_package(ZMQ 4.1.4 REQUIRED)
 find_package(VREP REQUIRED)
 find_package(BlueZero REQUIRED)
 
@@ -28,7 +27,6 @@ include_directories(${VREP_INCLUDE})
 include_directories(${CMAKE_BINARY_DIR}/generated)
 include_directories(${CMAKE_SOURCE_DIR}/external)
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${ZMQ_INCLUDE_DIRS})
 include_directories(${BLUEZERO_INCLUDE_DIRS})
 
 vrep_generate_stubs(${CMAKE_BINARY_DIR}/generated XML_FILE ${CMAKE_SOURCE_DIR}/callbacks.xml LUA_FILE ${CMAKE_SOURCE_DIR}/simExtBlueZero.lua)
