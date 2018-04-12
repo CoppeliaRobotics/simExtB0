@@ -148,7 +148,7 @@ void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *o
 void createPublisher(SScriptCallBack *p, const char *cmd, createPublisher_in *in, createPublisher_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
-    auto *ppub = new Publisher(pnode, in->topic);
+    auto *ppub = new Publisher(pnode, in->topic, in->managed, in->notify_graph);
 
     auto *meta = new Metadata;
     meta->handle = Handle<Publisher>::str(ppub);
@@ -179,7 +179,7 @@ void createSubscriber(SScriptCallBack *p, const char *cmd, createSubscriber_in *
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     auto callback = boost::bind(topicCallbackWrapper, p->scriptID, in->callback, _1);
-    auto *psub = new Subscriber(pnode, in->topic, callback);
+    auto *psub = new Subscriber(pnode, in->topic, callback, in->managed, in->notify_graph);
 
     auto *meta = new Metadata;
     meta->handle = Handle<Subscriber>::str(psub);
@@ -203,7 +203,7 @@ void destroySubscriber(SScriptCallBack *p, const char *cmd, destroySubscriber_in
 void createServiceClient(SScriptCallBack *p, const char *cmd, createServiceClient_in *in, createServiceClient_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
-    auto *pcli = new ServiceClient(pnode, in->service);
+    auto *pcli = new ServiceClient(pnode, in->service, in->managed, in->notify_graph);
 
     auto *meta = new Metadata;
     meta->handle = Handle<ServiceClient>::str(pcli);
@@ -234,7 +234,7 @@ void createServiceServer(SScriptCallBack *p, const char *cmd, createServiceServe
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     auto callback = boost::bind(serviceCallbackWrapper, p->scriptID, in->callback, _1, _2);
-    auto *psrv = new ServiceServer(pnode, in->service, callback);
+    auto *psrv = new ServiceServer(pnode, in->service, callback, in->managed, in->notify_graph);
 
     auto *meta = new Metadata;
     meta->handle = Handle<ServiceServer>::str(psrv);

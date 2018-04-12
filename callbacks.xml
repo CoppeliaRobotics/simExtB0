@@ -102,6 +102,12 @@
             <param name="topic" type="string">
                 <description>topic name</description>
             </param>
+            <param name="managed" type="bool" default="true">
+                <description>managed flag</description>
+            </param>
+            <param name="notify_graph" type="bool" default="true">
+                <description>notify_graph flag</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="string" default="-1">
@@ -153,6 +159,12 @@
             <param name="callback" type="string" default="">
                 <description>lua calback to call when a message is received</description>
             </param>
+            <param name="managed" type="bool" default="true">
+                <description>managed flag</description>
+            </param>
+            <param name="notify_graph" type="bool" default="true">
+                <description>notify_graph flag</description>
+            </param>
         </params>
         <return>
             <param name="handle" type="string" default="">
@@ -184,6 +196,12 @@
             </param>
             <param name="service" type="string">
                 <description>service name</description>
+            </param>
+            <param name="managed" type="bool" default="true">
+                <description>managed flag</description>
+            </param>
+            <param name="notify_graph" type="bool" default="true">
+                <description>notify_graph flag</description>
             </param>
         </params>
         <return>
@@ -238,6 +256,12 @@
             </param>
             <param name="callback" type="string" default="">
                 <description>lua calback to call when a request is received</description>
+            </param>
+            <param name="managed" type="bool" default="true">
+                <description>managed flag</description>
+            </param>
+            <param name="notify_graph" type="bool" default="true">
+                <description>notify_graph flag</description>
             </param>
         </params>
         <return>
