@@ -118,6 +118,57 @@
         <return>
         </return>
     </command>
+    <command name="pollSocket">
+        <description>Poll a socket (only needed for unmanaged sockets).</description>
+        <categories>
+            <category name="topic" />
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>socket handle</description>
+            </param>
+        </params>
+        <return>
+            <param name="result" type="bool">
+                <description>poll result</description>
+            </param>
+        </return>
+    </command>
+    <command name="readSocket">
+        <description>Read from a socket (only needed for unmanaged sockets).</description>
+        <categories>
+            <category name="topic" />
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>socket handle</description>
+            </param>
+        </params>
+        <return>
+            <param name="payload" type="string">
+                <description>message payload</description>
+            </param>
+        </return>
+    </command>
+    <command name="writeSocket">
+        <description>Write to a socket (only needed for unmanaged sockets).</description>
+        <categories>
+            <category name="topic" />
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>socket handle</description>
+            </param>
+            <param name="payload" type="string">
+                <description>message payload</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <command name="cleanupSocket">
         <description>Cleanup a socket (only needed for unmanaged sockets).</description>
         <categories>

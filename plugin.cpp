@@ -185,6 +185,30 @@ void spinOnceSocket(SScriptCallBack *p, const char *cmd, spinOnceSocket_in *in, 
     psock->spinOnce();
 }
 
+void pollSocket(SScriptCallBack *p, const char *cmd, pollSocket_in *in, pollSocket_out *out)
+{
+    auto *psock = Handle<Socket>::obj(in->handle);
+    if(!psock)
+        throw std::runtime_error("Invalid socket handle");
+    out->result = psock->poll();
+}
+
+void readSocket(SScriptCallBack *p, const char *cmd, readSocket_in *in, readSocket_out *out)
+{
+    auto *psock = Handle<Socket>::obj(in->handle);
+    if(!psock)
+        throw std::runtime_error("Invalid socket handle");
+    psock->readRaw(out->payload);
+}
+
+void writeSocket(SScriptCallBack *p, const char *cmd, writeSocket_in *in, writeSocket_out *out)
+{
+    auto *psock = Handle<Socket>::obj(in->handle);
+    if(!psock)
+        throw std::runtime_error("Invalid socket handle");
+    psock->writeRaw(in->payload);
+}
+
 void cleanupSocket(SScriptCallBack *p, const char *cmd, cleanupSocket_in *in, cleanupSocket_out *out)
 {
     auto *psock = Handle<Socket>::obj(in->handle);
