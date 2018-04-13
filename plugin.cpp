@@ -17,6 +17,7 @@
 std::set<std::string> handles;
 
 using Node = b0::Node;
+using Socket = b0::Socket;
 using Publisher = b0::Publisher;
 using Subscriber = b0::Subscriber;
 using ServiceClient = b0::ServiceClient;
@@ -69,6 +70,19 @@ template<> std::string Handle<Publisher>::tag() { return "b0.pub"; }
 template<> std::string Handle<Subscriber>::tag() { return "b0.sub"; }
 template<> std::string Handle<ServiceClient>::tag() { return "b0.cli"; }
 template<> std::string Handle<ServiceServer>::tag() { return "b0.srv"; }
+
+template<> Socket * Handle<Socket>::obj(std::string h)
+{
+    auto *ppub = Handle<Publisher>::obj(h);
+    if(ppub) return ppub;
+    auto *psub = Handle<Subscriber>::obj(h);
+    if(psub) return psub;
+    auto *pcli = Handle<ServiceClient>::obj(h);
+    if(pcli) return pcli;
+    auto *psrv = Handle<ServiceServer>::obj(h);
+    if(psrv) return psrv;
+    return nullptr;
+}
 
 struct Metadata
 {
@@ -157,89 +171,26 @@ void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *o
 
 void initSocket(SScriptCallBack *p, const char *cmd, initSocket_in *in, initSocket_out *out)
 {
-    auto *ppub = Handle<Publisher>::obj(in->handle);
-    if(ppub)
-    {
-        ppub->init();
-        return;
-    }
-    auto *psub = Handle<Subscriber>::obj(in->handle);
-    if(psub)
-    {
-        psub->init();
-        return;
-    }
-    auto *pcli = Handle<ServiceClient>::obj(in->handle);
-    if(pcli)
-    {
-        pcli->init();
-        return;
-    }
-    auto *psrv = Handle<ServiceServer>::obj(in->handle);
-    if(psrv)
-    {
-        psrv->init();
-        return;
-    }
-    throw std::runtime_error("Invalid socket handle");
+    auto *psock = Handle<Socket>::obj(in->handle);
+    if(!psock)
+        throw std::runtime_error("Invalid socket handle");
+    psock->init();
 }
 
 void spinOnceSocket(SScriptCallBack *p, const char *cmd, spinOnceSocket_in *in, spinOnceSocket_out *out)
 {
-    auto *ppub = Handle<Publisher>::obj(in->handle);
-    if(ppub)
-    {
-        ppub->spinOnce();
-        return;
-    }
-    auto *psub = Handle<Subscriber>::obj(in->handle);
-    if(psub)
-    {
-        psub->spinOnce();
-        return;
-    }
-    auto *pcli = Handle<ServiceClient>::obj(in->handle);
-    if(pcli)
-    {
-        pcli->spinOnce();
-        return;
-    }
-    auto *psrv = Handle<ServiceServer>::obj(in->handle);
-    if(psrv)
-    {
-        psrv->spinOnce();
-        return;
-    }
-    throw std::runtime_error("Invalid socket handle");
+    auto *psock = Handle<Socket>::obj(in->handle);
+    if(!psock)
+        throw std::runtime_error("Invalid socket handle");
+    psock->spinOnce();
 }
 
 void cleanupSocket(SScriptCallBack *p, const char *cmd, cleanupSocket_in *in, cleanupSocket_out *out)
 {
-    auto *ppub = Handle<Publisher>::obj(in->handle);
-    if(ppub)
-    {
-        ppub->cleanup();
-        return;
-    }
-    auto *psub = Handle<Subscriber>::obj(in->handle);
-    if(psub)
-    {
-        psub->cleanup();
-        return;
-    }
-    auto *pcli = Handle<ServiceClient>::obj(in->handle);
-    if(pcli)
-    {
-        pcli->cleanup();
-        return;
-    }
-    auto *psrv = Handle<ServiceServer>::obj(in->handle);
-    if(psrv)
-    {
-        psrv->cleanup();
-        return;
-    }
-    throw std::runtime_error("Invalid socket handle");
+    auto *psock = Handle<Socket>::obj(in->handle);
+    if(!psock)
+        throw std::runtime_error("Invalid socket handle");
+    psock->cleanup();
 }
 
 void createPublisher(SScriptCallBack *p, const char *cmd, createPublisher_in *in, createPublisher_out *out)
@@ -374,44 +325,27 @@ void destroyServiceServer(SScriptCallBack *p, const char *cmd, destroyServiceSer
 
 void setCompression(SScriptCallBack *p, const char *cmd, setCompression_in *in, setCompression_out *out)
 {
-    auto *ppub = Handle<Publisher>::obj(in->handle);
-    if(ppub)
-    {
-        ppub->setCompression(in->compression_algorithm, in->compression_level);
-        return;
-    }
-    auto *pcli = Handle<ServiceClient>::obj(in->handle);
-    if(pcli)
-    {
-        pcli->setCompression(in->compression_algorithm, in->compression_level);
-        return;
-    }
-    auto *psrv = Handle<ServiceServer>::obj(in->handle);
-    if(psrv)
-    {
-        psrv->setCompression(in->compression_algorithm, in->compression_level);
-        return;
-    }
+    auto *psock = Handle<Socket>::obj(in->handle);
+    if(!psock)
+        throw std::runtime_error("Invalid socket handle");
+    psock->setCompression(in->compression_algorithm, in->compression_level);
 }
 
 void setSocketOption(SScriptCallBack *p, const char *cmd, setSocketOption_in *in, setSocketOption_out *out)
 {
-    b0::Socket *socket = nullptr;
-    if(auto *ppub = Handle<Publisher>::obj(in->handle)) socket = ppub;
-    else if(auto *psub = Handle<Subscriber>::obj(in->handle)) socket = psub;
-    else if(auto *pcli = Handle<ServiceClient>::obj(in->handle)) socket = pcli;
-    else if(auto *psrv = Handle<ServiceServer>::obj(in->handle)) socket = psrv;
-    else throw std::string("invalid socket type");
+    auto *psock = Handle<Socket>::obj(in->handle);
+    if(!psock)
+        throw std::runtime_error("Invalid socket handle");
 
     int v = in->value;
-    if(in->option == "lingerPeriod") socket->setLingerPeriod(v);
-    else if(in->option == "backlog") socket->setBacklog(v);
-    else if(in->option == "readTimeout") socket->setReadTimeout(v);
-    else if(in->option == "writeTimeout") socket->setWriteTimeout(v);
-    else if(in->option == "immediate") socket->setImmediate(v);
-    else if(in->option == "conflate") socket->setConflate(v);
-    else if(in->option == "readHWM") socket->setReadHWM(v);
-    else if(in->option == "writeHWM") socket->setWriteHWM(v);
+    if(in->option == "lingerPeriod") psock->setLingerPeriod(v);
+    else if(in->option == "backlog") psock->setBacklog(v);
+    else if(in->option == "readTimeout") psock->setReadTimeout(v);
+    else if(in->option == "writeTimeout") psock->setWriteTimeout(v);
+    else if(in->option == "immediate") psock->setImmediate(v);
+    else if(in->option == "conflate") psock->setConflate(v);
+    else if(in->option == "readHWM") psock->setReadHWM(v);
+    else if(in->option == "writeHWM") psock->setWriteHWM(v);
     else throw (boost::format("invalid option: '%s'") % in->option).str();
 }
 
