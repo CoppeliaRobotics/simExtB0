@@ -115,6 +115,19 @@
             </param>
         </return>
     </command>
+    <command name="initPublisher">
+        <description>Initialize a publisher (only needed for unmanaged publishers).</description>
+        <categories>
+            <category name="topic" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>publisher handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <command name="publish">
         <description>Publish some data.</description>
         <categories>
@@ -126,6 +139,19 @@
             </param>
             <param name="payload" type="string">
                 <description>message payload</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="cleanupPublisher">
+        <description>Cleanup a publisher (only needed for unmanaged publishers).</description>
+        <categories>
+            <category name="topic" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>publisher handle</description>
             </param>
         </params>
         <return>
@@ -172,6 +198,32 @@
             </param>
         </return>
     </command>
+    <command name="initSubscriber">
+        <description>Initialize a subscriber (only needed for unmanaged subscribers).</description>
+        <categories>
+            <category name="topic" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>subscriber handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="cleanupSubscriber">
+        <description>Cleanup a subscriber (only needed for unmanaged subscribers).</description>
+        <categories>
+            <category name="topic" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>subscriber handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <command name="destroySubscriber">
         <description>Destroy a subscriber.</description>
         <categories>
@@ -210,6 +262,19 @@
             </param>
         </return>
     </command>
+    <command name="initServiceClient">
+        <description>Initialize a service client (only needed for unmanaged service clients).</description>
+        <categories>
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>service client handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
     <command name="call">
         <description>Call a service.</description>
         <categories>
@@ -227,6 +292,19 @@
             <param name="payload" type="string">
                 <description>response payload</description>
             </param>
+        </return>
+    </command>
+    <command name="cleanupServiceClient">
+        <description>Cleanup a service client (only needed for unmanaged service clients).</description>
+        <categories>
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>service client handle</description>
+            </param>
+        </params>
+        <return>
         </return>
     </command>
     <command name="destroyServiceClient">
@@ -268,6 +346,32 @@
             <param name="handle" type="string" default="">
                 <description>a handle to the new service server</description>
             </param>
+        </return>
+    </command>
+    <command name="initServiceServer">
+        <description>Initialize a service server (only needed for unmanaged service servers).</description>
+        <categories>
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>service server handle</description>
+            </param>
+        </params>
+        <return>
+        </return>
+    </command>
+    <command name="cleanupServiceServer">
+        <description>Cleanup a service server (only needed for unmanaged service servers).</description>
+        <categories>
+            <category name="service" />
+        </categories>
+        <params>
+            <param name="handle" type="string">
+                <description>service server handle</description>
+            </param>
+        </params>
+        <return>
         </return>
     </command>
     <command name="destroyServiceServer">
