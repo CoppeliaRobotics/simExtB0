@@ -155,6 +155,93 @@ void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *o
     delete pnode;
 }
 
+void initSocket(SScriptCallBack *p, const char *cmd, initSocket_in *in, initSocket_out *out)
+{
+    auto *ppub = Handle<Publisher>::obj(in->handle);
+    if(ppub)
+    {
+        ppub->init();
+        return;
+    }
+    auto *psub = Handle<Subscriber>::obj(in->handle);
+    if(psub)
+    {
+        psub->init();
+        return;
+    }
+    auto *pcli = Handle<ServiceClient>::obj(in->handle);
+    if(pcli)
+    {
+        pcli->init();
+        return;
+    }
+    auto *psrv = Handle<ServiceServer>::obj(in->handle);
+    if(psrv)
+    {
+        psrv->init();
+        return;
+    }
+    throw std::runtime_error("Invalid socket handle");
+}
+
+void spinOnceSocket(SScriptCallBack *p, const char *cmd, spinOnceSocket_in *in, spinOnceSocket_out *out)
+{
+    auto *ppub = Handle<Publisher>::obj(in->handle);
+    if(ppub)
+    {
+        ppub->spinOnce();
+        return;
+    }
+    auto *psub = Handle<Subscriber>::obj(in->handle);
+    if(psub)
+    {
+        psub->spinOnce();
+        return;
+    }
+    auto *pcli = Handle<ServiceClient>::obj(in->handle);
+    if(pcli)
+    {
+        pcli->spinOnce();
+        return;
+    }
+    auto *psrv = Handle<ServiceServer>::obj(in->handle);
+    if(psrv)
+    {
+        psrv->spinOnce();
+        return;
+    }
+    throw std::runtime_error("Invalid socket handle");
+}
+
+void cleanupSocket(SScriptCallBack *p, const char *cmd, cleanupSocket_in *in, cleanupSocket_out *out)
+{
+    auto *ppub = Handle<Publisher>::obj(in->handle);
+    if(ppub)
+    {
+        ppub->cleanup();
+        return;
+    }
+    auto *psub = Handle<Subscriber>::obj(in->handle);
+    if(psub)
+    {
+        psub->cleanup();
+        return;
+    }
+    auto *pcli = Handle<ServiceClient>::obj(in->handle);
+    if(pcli)
+    {
+        pcli->cleanup();
+        return;
+    }
+    auto *psrv = Handle<ServiceServer>::obj(in->handle);
+    if(psrv)
+    {
+        psrv->cleanup();
+        return;
+    }
+    throw std::runtime_error("Invalid socket handle");
+}
+
 void createPublisher(SScriptCallBack *p, const char *cmd, createPublisher_in *in, createPublisher_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
@@ -170,28 +257,12 @@ void createPublisher(SScriptCallBack *p, const char *cmd, createPublisher_in *in
     handles.insert(meta->handle);
 }
 
-void initPublisher(SScriptCallBack *p, const char *cmd, initPublisher_in *in, initPublisher_out *out)
-{
-    auto *ppub = Handle<Publisher>::obj(in->handle);
-    if(!ppub)
-        throw std::runtime_error("Invalid publisher handle");
-    ppub->init();
-}
-
 void publish(SScriptCallBack *p, const char *cmd, publish_in *in, publish_out *out)
 {
     auto *ppub = Handle<Publisher>::obj(in->handle);
     if(!ppub)
         throw std::runtime_error("Invalid publisher handle");
     ppub->publish(in->payload);
-}
-
-void cleanupPublisher(SScriptCallBack *p, const char *cmd, cleanupPublisher_in *in, cleanupPublisher_out *out)
-{
-    auto *ppub = Handle<Publisher>::obj(in->handle);
-    if(!ppub)
-        throw std::runtime_error("Invalid publisher handle");
-    ppub->cleanup();
 }
 
 void destroyPublisher(SScriptCallBack *p, const char *cmd, destroyPublisher_in *in, destroyPublisher_out *out)
@@ -223,22 +294,6 @@ void createSubscriber(SScriptCallBack *p, const char *cmd, createSubscriber_in *
     handles.insert(meta->handle);
 }
 
-void initSubscriber(SScriptCallBack *p, const char *cmd, initSubscriber_in *in, initSubscriber_out *out)
-{
-    auto *psub = Handle<Subscriber>::obj(in->handle);
-    if(!psub)
-        throw std::runtime_error("Invalid subscriber handle");
-    psub->init();
-}
-
-void cleanupSubscriber(SScriptCallBack *p, const char *cmd, cleanupSubscriber_in *in, cleanupSubscriber_out *out)
-{
-    auto *psub = Handle<Subscriber>::obj(in->handle);
-    if(!psub)
-        throw std::runtime_error("Invalid subscriber handle");
-    psub->cleanup();
-}
-
 void destroySubscriber(SScriptCallBack *p, const char *cmd, destroySubscriber_in *in, destroySubscriber_out *out)
 {
     auto *psub = Handle<Subscriber>::obj(in->handle);
@@ -267,28 +322,12 @@ void createServiceClient(SScriptCallBack *p, const char *cmd, createServiceClien
     handles.insert(meta->handle);
 }
 
-void initServiceClient(SScriptCallBack *p, const char *cmd, initServiceClient_in *in, initServiceClient_out *out)
-{
-    auto *pcli = Handle<ServiceClient>::obj(in->handle);
-    if(!pcli)
-        throw std::runtime_error("Invalid service client handle");
-    pcli->init();
-}
-
 void call(SScriptCallBack *p, const char *cmd, call_in *in, call_out *out)
 {
     auto *pcli = Handle<ServiceClient>::obj(in->handle);
     if(!pcli)
         throw std::runtime_error("Invalid service client handle");
     pcli->call(in->payload, out->payload);
-}
-
-void cleanupServiceClient(SScriptCallBack *p, const char *cmd, cleanupServiceClient_in *in, cleanupServiceClient_out *out)
-{
-    auto *pcli = Handle<ServiceClient>::obj(in->handle);
-    if(!pcli)
-        throw std::runtime_error("Invalid service client handle");
-    pcli->cleanup();
 }
 
 void destroyServiceClient(SScriptCallBack *p, const char *cmd, destroyServiceClient_in *in, destroyServiceClient_out *out)
@@ -318,22 +357,6 @@ void createServiceServer(SScriptCallBack *p, const char *cmd, createServiceServe
 
     out->handle = meta->handle;
     handles.insert(meta->handle);
-}
-
-void initServiceServer(SScriptCallBack *p, const char *cmd, initServiceServer_in *in, initServiceServer_out *out)
-{
-    auto *psrv = Handle<ServiceServer>::obj(in->handle);
-    if(!psrv)
-        throw std::runtime_error("Invalid service server handle");
-    psrv->init();
-}
-
-void cleanupServiceServer(SScriptCallBack *p, const char *cmd, cleanupServiceServer_in *in, cleanupServiceServer_out *out)
-{
-    auto *psrv = Handle<ServiceServer>::obj(in->handle);
-    if(!psrv)
-        throw std::runtime_error("Invalid service server handle");
-    psrv->init();
 }
 
 void destroyServiceServer(SScriptCallBack *p, const char *cmd, destroyServiceServer_in *in, destroyServiceServer_out *out)
