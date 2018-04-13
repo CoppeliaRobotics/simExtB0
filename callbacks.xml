@@ -325,14 +325,14 @@
         </return>
     </command>
     <command name="setCompression">
-        <description>Set compression for the specified publisher/service client/service server.</description>
+        <description>Set compression for the specified socket.</description>
         <categories>
             <category name="topic" />
             <category name="service" />
         </categories>
         <params>
             <param name="handle" type="string">
-                <description>publisher/service client/service server handle</description>
+                <description>socket handle</description>
             </param>
             <param name="compression_algorithm" type="string">
                 <description>compression algorithm to use. an empty string will dsable compression.</description>
