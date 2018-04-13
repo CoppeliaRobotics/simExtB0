@@ -112,12 +112,16 @@ void create(SScriptCallBack *p, const char *cmd, create_in *in, create_out *out)
 void setAnnounceTimeout(SScriptCallBack *p, const char *cmd, setAnnounceTimeout_in *in, setAnnounceTimeout_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
+    if(!pnode)
+        throw std::runtime_error("Invalid node handle");
     pnode->setAnnounceTimeout(in->timeout);
 }
 
 void init(SScriptCallBack *p, const char *cmd, init_in *in, init_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
+    if(!pnode)
+        throw std::runtime_error("Invalid node handle");
     pnode->init();
     out->name = pnode->getName();
 }
@@ -125,18 +129,24 @@ void init(SScriptCallBack *p, const char *cmd, init_in *in, init_out *out)
 void spinOnce(SScriptCallBack *p, const char *cmd, spinOnce_in *in, spinOnce_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
+    if(!pnode)
+        throw std::runtime_error("Invalid node handle");
     pnode->spinOnce();
 }
 
 void cleanup(SScriptCallBack *p, const char *cmd, cleanup_in *in, cleanup_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
+    if(!pnode)
+        throw std::runtime_error("Invalid node handle");
     pnode->cleanup();
 }
 
 void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
+    if(!pnode)
+        throw std::runtime_error("Invalid node handle");
 
     auto *meta = Metadata::get(pnode);
     handles.erase(meta->handle);
@@ -148,6 +158,8 @@ void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *o
 void createPublisher(SScriptCallBack *p, const char *cmd, createPublisher_in *in, createPublisher_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
+    if(!pnode)
+        throw std::runtime_error("Invalid node handle");
     auto *ppub = new Publisher(pnode, in->topic, in->managed, in->notify_graph);
 
     auto *meta = new Metadata;
@@ -161,24 +173,32 @@ void createPublisher(SScriptCallBack *p, const char *cmd, createPublisher_in *in
 void initPublisher(SScriptCallBack *p, const char *cmd, initPublisher_in *in, initPublisher_out *out)
 {
     auto *ppub = Handle<Publisher>::obj(in->handle);
+    if(!ppub)
+        throw std::runtime_error("Invalid publisher handle");
     ppub->init();
 }
 
 void publish(SScriptCallBack *p, const char *cmd, publish_in *in, publish_out *out)
 {
     auto *ppub = Handle<Publisher>::obj(in->handle);
+    if(!ppub)
+        throw std::runtime_error("Invalid publisher handle");
     ppub->publish(in->payload);
 }
 
 void cleanupPublisher(SScriptCallBack *p, const char *cmd, cleanupPublisher_in *in, cleanupPublisher_out *out)
 {
     auto *ppub = Handle<Publisher>::obj(in->handle);
+    if(!ppub)
+        throw std::runtime_error("Invalid publisher handle");
     ppub->cleanup();
 }
 
 void destroyPublisher(SScriptCallBack *p, const char *cmd, destroyPublisher_in *in, destroyPublisher_out *out)
 {
     auto *ppub = Handle<Publisher>::obj(in->handle);
+    if(!ppub)
+        throw std::runtime_error("Invalid publisher handle");
 
     auto *meta = Metadata::get(ppub);
     handles.erase(meta->handle);
@@ -190,6 +210,8 @@ void destroyPublisher(SScriptCallBack *p, const char *cmd, destroyPublisher_in *
 void createSubscriber(SScriptCallBack *p, const char *cmd, createSubscriber_in *in, createSubscriber_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
+    if(!pnode)
+        throw std::runtime_error("Invalid node handle");
     auto callback = boost::bind(topicCallbackWrapper, p->scriptID, in->callback, _1);
     auto *psub = new Subscriber(pnode, in->topic, callback, in->managed, in->notify_graph);
 
@@ -204,18 +226,24 @@ void createSubscriber(SScriptCallBack *p, const char *cmd, createSubscriber_in *
 void initSubscriber(SScriptCallBack *p, const char *cmd, initSubscriber_in *in, initSubscriber_out *out)
 {
     auto *psub = Handle<Subscriber>::obj(in->handle);
+    if(!psub)
+        throw std::runtime_error("Invalid subscriber handle");
     psub->init();
 }
 
 void cleanupSubscriber(SScriptCallBack *p, const char *cmd, cleanupSubscriber_in *in, cleanupSubscriber_out *out)
 {
     auto *psub = Handle<Subscriber>::obj(in->handle);
+    if(!psub)
+        throw std::runtime_error("Invalid subscriber handle");
     psub->cleanup();
 }
 
 void destroySubscriber(SScriptCallBack *p, const char *cmd, destroySubscriber_in *in, destroySubscriber_out *out)
 {
     auto *psub = Handle<Subscriber>::obj(in->handle);
+    if(!psub)
+        throw std::runtime_error("Invalid subscriber handle");
 
     auto *meta = Metadata::get(psub);
     handles.erase(meta->handle);
@@ -227,6 +255,8 @@ void destroySubscriber(SScriptCallBack *p, const char *cmd, destroySubscriber_in
 void createServiceClient(SScriptCallBack *p, const char *cmd, createServiceClient_in *in, createServiceClient_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
+    if(!pnode)
+        throw std::runtime_error("Invalid node handle");
     auto *pcli = new ServiceClient(pnode, in->service, in->managed, in->notify_graph);
 
     auto *meta = new Metadata;
@@ -240,24 +270,32 @@ void createServiceClient(SScriptCallBack *p, const char *cmd, createServiceClien
 void initServiceClient(SScriptCallBack *p, const char *cmd, initServiceClient_in *in, initServiceClient_out *out)
 {
     auto *pcli = Handle<ServiceClient>::obj(in->handle);
+    if(!pcli)
+        throw std::runtime_error("Invalid service client handle");
     pcli->init();
 }
 
 void call(SScriptCallBack *p, const char *cmd, call_in *in, call_out *out)
 {
     auto *pcli = Handle<ServiceClient>::obj(in->handle);
+    if(!pcli)
+        throw std::runtime_error("Invalid service client handle");
     pcli->call(in->payload, out->payload);
 }
 
 void cleanupServiceClient(SScriptCallBack *p, const char *cmd, cleanupServiceClient_in *in, cleanupServiceClient_out *out)
 {
     auto *pcli = Handle<ServiceClient>::obj(in->handle);
+    if(!pcli)
+        throw std::runtime_error("Invalid service client handle");
     pcli->cleanup();
 }
 
 void destroyServiceClient(SScriptCallBack *p, const char *cmd, destroyServiceClient_in *in, destroyServiceClient_out *out)
 {
     auto *pcli = Handle<ServiceClient>::obj(in->handle);
+    if(!pcli)
+        throw std::runtime_error("Invalid service client handle");
 
     auto *meta = Metadata::get(pcli);
     handles.erase(meta->handle);
@@ -269,6 +307,8 @@ void destroyServiceClient(SScriptCallBack *p, const char *cmd, destroyServiceCli
 void createServiceServer(SScriptCallBack *p, const char *cmd, createServiceServer_in *in, createServiceServer_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
+    if(!pnode)
+        throw std::runtime_error("Invalid node handle");
     auto callback = boost::bind(serviceCallbackWrapper, p->scriptID, in->callback, _1, _2);
     auto *psrv = new ServiceServer(pnode, in->service, callback, in->managed, in->notify_graph);
 
@@ -283,18 +323,24 @@ void createServiceServer(SScriptCallBack *p, const char *cmd, createServiceServe
 void initServiceServer(SScriptCallBack *p, const char *cmd, initServiceServer_in *in, initServiceServer_out *out)
 {
     auto *psrv = Handle<ServiceServer>::obj(in->handle);
+    if(!psrv)
+        throw std::runtime_error("Invalid service server handle");
     psrv->init();
 }
 
 void cleanupServiceServer(SScriptCallBack *p, const char *cmd, cleanupServiceServer_in *in, cleanupServiceServer_out *out)
 {
     auto *psrv = Handle<ServiceServer>::obj(in->handle);
+    if(!psrv)
+        throw std::runtime_error("Invalid service server handle");
     psrv->init();
 }
 
 void destroyServiceServer(SScriptCallBack *p, const char *cmd, destroyServiceServer_in *in, destroyServiceServer_out *out)
 {
     auto *psrv = Handle<ServiceServer>::obj(in->handle);
+    if(!psrv)
+        throw std::runtime_error("Invalid service server handle");
 
     auto *meta = Metadata::get(psrv);
     handles.erase(meta->handle);
