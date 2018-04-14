@@ -23,7 +23,7 @@ using Subscriber = b0::Subscriber;
 using ServiceClient = b0::ServiceClient;
 using ServiceServer = b0::ServiceServer;
 
-// handle: a tool for pointer <--> string conversion
+// handle: a tool for pointer <--> handle (string) conversion
 template<typename T>
 struct Handle
 {
@@ -222,7 +222,7 @@ void createPublisher(SScriptCallBack *p, const char *cmd, createPublisher_in *in
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     if(!pnode)
         throw std::runtime_error("Invalid node handle");
-    auto *ppub = new Publisher(pnode, in->topic, in->managed, in->notify_graph);
+    auto *ppub = new Publisher(pnode, in->topic, in->managed, in->notifyGraph);
 
     auto *meta = new Metadata;
     meta->handle = Handle<Publisher>::str(ppub);
@@ -259,7 +259,7 @@ void createSubscriber(SScriptCallBack *p, const char *cmd, createSubscriber_in *
     if(!pnode)
         throw std::runtime_error("Invalid node handle");
     auto callback = boost::bind(topicCallbackWrapper, p->scriptID, in->callback, _1);
-    auto *psub = new Subscriber(pnode, in->topic, callback, in->managed, in->notify_graph);
+    auto *psub = new Subscriber(pnode, in->topic, callback, in->managed, in->notifyGraph);
 
     auto *meta = new Metadata;
     meta->handle = Handle<Subscriber>::str(psub);
@@ -287,7 +287,7 @@ void createServiceClient(SScriptCallBack *p, const char *cmd, createServiceClien
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     if(!pnode)
         throw std::runtime_error("Invalid node handle");
-    auto *pcli = new ServiceClient(pnode, in->service, in->managed, in->notify_graph);
+    auto *pcli = new ServiceClient(pnode, in->service, in->managed, in->notifyGraph);
 
     auto *meta = new Metadata;
     meta->handle = Handle<ServiceClient>::str(pcli);
@@ -324,7 +324,7 @@ void createServiceServer(SScriptCallBack *p, const char *cmd, createServiceServe
     if(!pnode)
         throw std::runtime_error("Invalid node handle");
     auto callback = boost::bind(serviceCallbackWrapper, p->scriptID, in->callback, _1, _2);
-    auto *psrv = new ServiceServer(pnode, in->service, callback, in->managed, in->notify_graph);
+    auto *psrv = new ServiceServer(pnode, in->service, callback, in->managed, in->notifyGraph);
 
     auto *meta = new Metadata;
     meta->handle = Handle<ServiceServer>::str(psrv);
@@ -352,7 +352,7 @@ void setCompression(SScriptCallBack *p, const char *cmd, setCompression_in *in, 
     auto *psock = Handle<Socket>::obj(in->handle);
     if(!psock)
         throw std::runtime_error("Invalid socket handle");
-    psock->setCompression(in->compression_algorithm, in->compression_level);
+    psock->setCompression(in->compressionAlgorithm, in->compressionLevel);
 }
 
 void setSocketOption(SScriptCallBack *p, const char *cmd, setSocketOption_in *in, setSocketOption_out *out)
