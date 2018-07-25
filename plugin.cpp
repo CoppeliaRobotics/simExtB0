@@ -13,7 +13,11 @@
 #include "plugin.h"
 #include "stubs.h"
 #include "config.h"
-#include <b0/b0.h>
+#include <b0/node.h>
+#include <b0/publisher.h>
+#include <b0/subscriber.h>
+#include <b0/service_client.h>
+#include <b0/service_server.h>
 
 std::set<std::string> handles;
 
