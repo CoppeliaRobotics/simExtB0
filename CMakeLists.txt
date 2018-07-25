@@ -20,7 +20,7 @@ endif()
 find_package(Boost REQUIRED COMPONENTS thread system regex filesystem)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules/")
-find_package(VREP REQUIRED)
+find_package(VREP 3.5.0 REQUIRED)
 find_package(BlueZero REQUIRED)
 
 include_directories(${VREP_INCLUDE})
