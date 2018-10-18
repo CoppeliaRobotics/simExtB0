@@ -354,6 +354,8 @@ public:
 
         simSetModuleInfo(PLUGIN_NAME, 0, "BlueZero Interface Plugin", 0);
         simSetModuleInfo(PLUGIN_NAME, 1, BUILD_DATE, 0);
+
+        b0::init();
     }
 };
 
