@@ -1,33 +1,19 @@
 cmake_minimum_required(VERSION 2.8.12)
 include(CMakeParseArguments)
 
-if(NOT BLUEZERO_DIR)
-    if(NOT DEFINED ENV{BLUEZERO_DIR})
-        if(EXISTS "${CMAKE_SOURCE_DIR}/../bluezero")
-            set(BLUEZERO_DIR "${CMAKE_SOURCE_DIR}/../bluezero")
-        else()
-            message(FATAL_ERROR "Cannot find BlueZero. Please set the BLUEZERO_DIR environment variable.")
-        endif()
-    else()
-        set(BLUEZERO_DIR "$ENV{BLUEZERO_DIR}")
-    endif()
-endif()
-
+set(BLUEZERO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../bluezero" CACHE STRING "BlueZero directory")
 file(TO_CMAKE_PATH "${BLUEZERO_DIR}" BLUEZERO_DIR)
 
-if(NOT BLUEZERO_BUILD_DIR)
-    if(NOT DEFINED ENV{BLUEZERO_BUILD_DIR})
-        if(EXISTS "${BLUEZERO_DIR}/build")
-            set(BLUEZERO_BUILD_DIR "${BLUEZERO_DIR}/build")
-        else()
-            message(FATAL_ERROR "Cannot find BlueZero build dir. Please set the BLUEZERO_BUILD_DIR environment variable.")
-        endif()
-    else()
-        set(BLUEZERO_BUILD_DIR "$ENV{BLUEZERO_BUILD_DIR}")
+if(NOT EXISTS "${BLUEZERO_DIR}")
+    message(FATAL_ERROR "BLUEZERO_DIR does not contain a valid directory")
+else()
+    set(BLUEZERO_BUILD_DIR "${BLUEZERO_DIR}/build" CACHE STRING "BlueZero build directory")
+    file(TO_CMAKE_PATH "${BLUEZERO_BUILD_DIR}" BLUEZERO_BUILD_DIR)
+
+    if(NOT EXISTS "${BLUEZERO_BUILD_DIR}")
+        message(FATAL_ERROR "BLUEZERO_BUILD_DIR does not contain a valid directory")
     endif()
 endif()
-
-file(TO_CMAKE_PATH "${BLUEZERO_BUILD_DIR}" BLUEZERO_BUILD_DIR)
 
 set(BLUEZERO_INCLUDE_SEARCH_PATHS
     /usr/include
@@ -52,10 +38,13 @@ set(BLUEZERO_LIBRARIES
     ${Boost_LIBRARIES}
     ${BLUEZERO_LIBRARY}
 )
+unset(BLUEZERO_LIBRARY CACHE)
 set(BLUEZERO_INCLUDE_DIRS
     ${Boost_INCLUDE_DIRS}
     ${BLUEZERO_INCLUDE_DIR_1}
     ${BLUEZERO_INCLUDE_DIR_2}
 )
+unset(BLUEZERO_INCLUDE_DIR_1 CACHE)
+unset(BLUEZERO_INCLUDE_DIR_2 CACHE)
 
 mark_as_advanced(BLUEZERO_LIBRARIES BLUEZERO_INCLUDE_DIRS)
