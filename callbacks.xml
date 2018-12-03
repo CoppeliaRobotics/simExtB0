@@ -3,7 +3,7 @@
 
 <plugin name="BlueZero" short-name="B0" author="federico.ferri.it@gmail.com">
     <description>BlueZero plugin for V-REP.</description>
-    <command name="create">
+    <command name="nodeCreate">
         <description>Create a new node.</description>
         <categories>
             <category name="node" />
@@ -19,7 +19,7 @@
             </param>
         </return>
     </command>
-    <command name="setAnnounceTimeout">
+    <command name="nodeSetAnnounceTimeout">
         <description>Set the announceNode timeout.</description>
         <categories>
             <category name="node" />
@@ -35,7 +35,7 @@
         <return>
         </return>
     </command>
-    <command name="init">
+    <command name="nodeInit">
         <description>Initialize a node.</description>
         <categories>
             <category name="node" />
@@ -51,7 +51,7 @@
             </param>
         </return>
     </command>
-    <command name="spinOnce">
+    <command name="nodeSpinOnce">
         <description>Spin a node.</description>
         <categories>
             <category name="node" />
@@ -64,7 +64,7 @@
         <return>
         </return>
     </command>
-    <command name="cleanup">
+    <command name="nodeCleanup">
         <description>Cleanup a node.</description>
         <categories>
             <category name="node" />
@@ -77,7 +77,7 @@
         <return>
         </return>
     </command>
-    <command name="destroy">
+    <command name="nodeDestroy">
         <description>Destroy a node.</description>
         <categories>
             <category name="node" />
@@ -90,7 +90,7 @@
         <return>
         </return>
     </command>
-    <command name="initSocket">
+    <command name="socketInit">
         <description>Initialize a socket (only needed for unmanaged sockets).</description>
         <categories>
             <category name="topic" />
@@ -104,7 +104,7 @@
         <return>
         </return>
     </command>
-    <command name="spinOnceSocket">
+    <command name="socketSpinOnce">
         <description>Spin a socket (only needed for unmanaged sockets).</description>
         <categories>
             <category name="topic" />
@@ -118,7 +118,7 @@
         <return>
         </return>
     </command>
-    <command name="pollSocket">
+    <command name="socketPoll">
         <description>Poll a socket (only needed for unmanaged sockets).</description>
         <categories>
             <category name="topic" />
@@ -135,7 +135,7 @@
             </param>
         </return>
     </command>
-    <command name="readSocket">
+    <command name="socketRead">
         <description>Read from a socket (only needed for unmanaged sockets).</description>
         <categories>
             <category name="topic" />
@@ -152,7 +152,7 @@
             </param>
         </return>
     </command>
-    <command name="writeSocket">
+    <command name="socketWrite">
         <description>Write to a socket (only needed for unmanaged sockets).</description>
         <categories>
             <category name="topic" />
@@ -169,7 +169,7 @@
         <return>
         </return>
     </command>
-    <command name="cleanupSocket">
+    <command name="socketCleanup">
         <description>Cleanup a socket (only needed for unmanaged sockets).</description>
         <categories>
             <category name="topic" />
@@ -182,7 +182,7 @@
         <return>
         </return>
     </command>
-    <command name="createPublisher">
+    <command name="publisherCreate">
         <description>Create a new publisher.</description>
         <categories>
             <category name="topic" />
@@ -207,7 +207,7 @@
             </param>
         </return>
     </command>
-    <command name="publish">
+    <command name="publisherPublish">
         <description>Publish some data.</description>
         <categories>
             <category name="topic" />
@@ -223,7 +223,7 @@
         <return>
         </return>
     </command>
-    <command name="destroyPublisher">
+    <command name="publisherDestroy">
         <description>Destroy a publisher.</description>
         <categories>
             <category name="topic" />
@@ -236,7 +236,7 @@
         <return>
         </return>
     </command>
-    <command name="createSubscriber">
+    <command name="subscriberCreate">
         <description>Create a new subscriber.</description>
         <categories>
             <category name="topic" />
@@ -264,7 +264,7 @@
             </param>
         </return>
     </command>
-    <command name="destroySubscriber">
+    <command name="subscriberDestroy">
         <description>Destroy a subscriber.</description>
         <categories>
             <category name="topic" />
@@ -277,7 +277,7 @@
         <return>
         </return>
     </command>
-    <command name="createServiceClient">
+    <command name="serviceClientCreate">
         <description>Create a new service client.</description>
         <categories>
             <category name="service" />
@@ -302,7 +302,7 @@
             </param>
         </return>
     </command>
-    <command name="call">
+    <command name="serviceClientCall">
         <description>Call a service.</description>
         <categories>
             <category name="service" />
@@ -321,7 +321,7 @@
             </param>
         </return>
     </command>
-    <command name="destroyServiceClient">
+    <command name="serviceClientDestroy">
         <description>Destroy a service client.</description>
         <categories>
             <category name="service" />
@@ -334,7 +334,7 @@
         <return>
         </return>
     </command>
-    <command name="createServiceServer">
+    <command name="serviceServerCreate">
         <description>Create a new service server.</description>
         <categories>
             <category name="service" />
@@ -362,7 +362,7 @@
             </param>
         </return>
     </command>
-    <command name="destroyServiceServer">
+    <command name="serviceServerDestroy">
         <description>Destroy a service server.</description>
         <categories>
             <category name="service" />
@@ -375,7 +375,7 @@
         <return>
         </return>
     </command>
-    <command name="setCompression">
+    <command name="socketSetCompression">
         <description>Set compression for the specified socket.</description>
         <categories>
             <category name="topic" />
@@ -395,7 +395,7 @@
         <return>
         </return>
     </command>
-    <command name="setSocketOption">
+    <command name="socketSetOption">
         <description>Set a low-level socket option. Available options:
             <ul>
                 <li>lingerPeriod</li>
