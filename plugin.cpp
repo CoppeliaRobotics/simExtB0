@@ -76,7 +76,7 @@ void serviceCallbackWrapper(int scriptID, std::string callback, const std::strin
     rep_payload = out.payload;
 }
 
-void create(SScriptCallBack *p, const char *cmd, create_in *in, create_out *out)
+void nodeCreate(SScriptCallBack *p, const char *cmd, nodeCreate_in *in, nodeCreate_out *out)
 {
     auto *pnode = new Node(in->name);
 
@@ -88,7 +88,7 @@ void create(SScriptCallBack *p, const char *cmd, create_in *in, create_out *out)
     handles.insert(meta->handle);
 }
 
-void setAnnounceTimeout(SScriptCallBack *p, const char *cmd, setAnnounceTimeout_in *in, setAnnounceTimeout_out *out)
+void nodeSetAnnounceTimeout(SScriptCallBack *p, const char *cmd, nodeSetAnnounceTimeout_in *in, nodeSetAnnounceTimeout_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
     if(!pnode)
@@ -96,7 +96,7 @@ void setAnnounceTimeout(SScriptCallBack *p, const char *cmd, setAnnounceTimeout_
     pnode->setAnnounceTimeout(in->timeout);
 }
 
-void init(SScriptCallBack *p, const char *cmd, init_in *in, init_out *out)
+void nodeInit(SScriptCallBack *p, const char *cmd, nodeInit_in *in, nodeInit_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
     if(!pnode)
@@ -105,7 +105,7 @@ void init(SScriptCallBack *p, const char *cmd, init_in *in, init_out *out)
     out->name = pnode->getName();
 }
 
-void spinOnce(SScriptCallBack *p, const char *cmd, spinOnce_in *in, spinOnce_out *out)
+void nodeSpinOnce(SScriptCallBack *p, const char *cmd, nodeSpinOnce_in *in, nodeSpinOnce_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
     if(!pnode)
@@ -113,7 +113,7 @@ void spinOnce(SScriptCallBack *p, const char *cmd, spinOnce_in *in, spinOnce_out
     pnode->spinOnce();
 }
 
-void cleanup(SScriptCallBack *p, const char *cmd, cleanup_in *in, cleanup_out *out)
+void nodeCleanup(SScriptCallBack *p, const char *cmd, nodeCleanup_in *in, nodeCleanup_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
     if(!pnode)
@@ -121,7 +121,7 @@ void cleanup(SScriptCallBack *p, const char *cmd, cleanup_in *in, cleanup_out *o
     pnode->cleanup();
 }
 
-void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *out)
+void nodeDestroy(SScriptCallBack *p, const char *cmd, nodeDestroy_in *in, nodeDestroy_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->handle);
     if(!pnode)
@@ -134,7 +134,7 @@ void destroy(SScriptCallBack *p, const char *cmd, destroy_in *in, destroy_out *o
     delete pnode;
 }
 
-void initSocket(SScriptCallBack *p, const char *cmd, initSocket_in *in, initSocket_out *out)
+void socketInit(SScriptCallBack *p, const char *cmd, socketInit_in *in, socketInit_out *out)
 {
     auto *psock = Handle<Socket>::obj(in->handle);
     if(!psock)
@@ -142,7 +142,7 @@ void initSocket(SScriptCallBack *p, const char *cmd, initSocket_in *in, initSock
     psock->init();
 }
 
-void spinOnceSocket(SScriptCallBack *p, const char *cmd, spinOnceSocket_in *in, spinOnceSocket_out *out)
+void socketSpinOnce(SScriptCallBack *p, const char *cmd, socketSpinOnce_in *in, socketSpinOnce_out *out)
 {
     auto *psock = Handle<Socket>::obj(in->handle);
     if(!psock)
@@ -150,7 +150,7 @@ void spinOnceSocket(SScriptCallBack *p, const char *cmd, spinOnceSocket_in *in, 
     psock->spinOnce();
 }
 
-void pollSocket(SScriptCallBack *p, const char *cmd, pollSocket_in *in, pollSocket_out *out)
+void socketPoll(SScriptCallBack *p, const char *cmd, socketPoll_in *in, socketPoll_out *out)
 {
     auto *psock = Handle<Socket>::obj(in->handle);
     if(!psock)
@@ -158,7 +158,7 @@ void pollSocket(SScriptCallBack *p, const char *cmd, pollSocket_in *in, pollSock
     out->result = psock->poll();
 }
 
-void readSocket(SScriptCallBack *p, const char *cmd, readSocket_in *in, readSocket_out *out)
+void socketRead(SScriptCallBack *p, const char *cmd, socketRead_in *in, socketRead_out *out)
 {
     auto *psock = Handle<Socket>::obj(in->handle);
     if(!psock)
@@ -166,7 +166,7 @@ void readSocket(SScriptCallBack *p, const char *cmd, readSocket_in *in, readSock
     psock->readRaw(out->payload);
 }
 
-void writeSocket(SScriptCallBack *p, const char *cmd, writeSocket_in *in, writeSocket_out *out)
+void socketWrite(SScriptCallBack *p, const char *cmd, socketWrite_in *in, socketWrite_out *out)
 {
     auto *psock = Handle<Socket>::obj(in->handle);
     if(!psock)
@@ -174,7 +174,7 @@ void writeSocket(SScriptCallBack *p, const char *cmd, writeSocket_in *in, writeS
     psock->writeRaw(in->payload);
 }
 
-void cleanupSocket(SScriptCallBack *p, const char *cmd, cleanupSocket_in *in, cleanupSocket_out *out)
+void socketCleanup(SScriptCallBack *p, const char *cmd, socketCleanup_in *in, socketCleanup_out *out)
 {
     auto *psock = Handle<Socket>::obj(in->handle);
     if(!psock)
@@ -182,7 +182,7 @@ void cleanupSocket(SScriptCallBack *p, const char *cmd, cleanupSocket_in *in, cl
     psock->cleanup();
 }
 
-void createPublisher(SScriptCallBack *p, const char *cmd, createPublisher_in *in, createPublisher_out *out)
+void publisherCreate(SScriptCallBack *p, const char *cmd, publisherCreate_in *in, publisherCreate_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     if(!pnode)
@@ -197,7 +197,7 @@ void createPublisher(SScriptCallBack *p, const char *cmd, createPublisher_in *in
     handles.insert(meta->handle);
 }
 
-void publish(SScriptCallBack *p, const char *cmd, publish_in *in, publish_out *out)
+void publisherPublish(SScriptCallBack *p, const char *cmd, publisherPublish_in *in, publisherPublish_out *out)
 {
     auto *ppub = Handle<Publisher>::obj(in->handle);
     if(!ppub)
@@ -205,7 +205,7 @@ void publish(SScriptCallBack *p, const char *cmd, publish_in *in, publish_out *o
     ppub->publish(in->payload);
 }
 
-void destroyPublisher(SScriptCallBack *p, const char *cmd, destroyPublisher_in *in, destroyPublisher_out *out)
+void publisherDestroy(SScriptCallBack *p, const char *cmd, publisherDestroy_in *in, publisherDestroy_out *out)
 {
     auto *ppub = Handle<Publisher>::obj(in->handle);
     if(!ppub)
@@ -218,7 +218,7 @@ void destroyPublisher(SScriptCallBack *p, const char *cmd, destroyPublisher_in *
     delete ppub;
 }
 
-void createSubscriber(SScriptCallBack *p, const char *cmd, createSubscriber_in *in, createSubscriber_out *out)
+void subscriberCreate(SScriptCallBack *p, const char *cmd, subscriberCreate_in *in, subscriberCreate_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     if(!pnode)
@@ -234,7 +234,7 @@ void createSubscriber(SScriptCallBack *p, const char *cmd, createSubscriber_in *
     handles.insert(meta->handle);
 }
 
-void destroySubscriber(SScriptCallBack *p, const char *cmd, destroySubscriber_in *in, destroySubscriber_out *out)
+void subscriberDestroy(SScriptCallBack *p, const char *cmd, subscriberDestroy_in *in, subscriberDestroy_out *out)
 {
     auto *psub = Handle<Subscriber>::obj(in->handle);
     if(!psub)
@@ -247,7 +247,7 @@ void destroySubscriber(SScriptCallBack *p, const char *cmd, destroySubscriber_in
     delete psub;
 }
 
-void createServiceClient(SScriptCallBack *p, const char *cmd, createServiceClient_in *in, createServiceClient_out *out)
+void serviceClientCreate(SScriptCallBack *p, const char *cmd, serviceClientCreate_in *in, serviceClientCreate_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     if(!pnode)
@@ -262,7 +262,7 @@ void createServiceClient(SScriptCallBack *p, const char *cmd, createServiceClien
     handles.insert(meta->handle);
 }
 
-void call(SScriptCallBack *p, const char *cmd, call_in *in, call_out *out)
+void serviceClientCall(SScriptCallBack *p, const char *cmd, serviceClientCall_in *in, serviceClientCall_out *out)
 {
     auto *pcli = Handle<ServiceClient>::obj(in->handle);
     if(!pcli)
@@ -270,7 +270,7 @@ void call(SScriptCallBack *p, const char *cmd, call_in *in, call_out *out)
     pcli->call(in->payload, out->payload);
 }
 
-void destroyServiceClient(SScriptCallBack *p, const char *cmd, destroyServiceClient_in *in, destroyServiceClient_out *out)
+void serviceClientDestroy(SScriptCallBack *p, const char *cmd, serviceClientDestroy_in *in, serviceClientDestroy_out *out)
 {
     auto *pcli = Handle<ServiceClient>::obj(in->handle);
     if(!pcli)
@@ -283,7 +283,7 @@ void destroyServiceClient(SScriptCallBack *p, const char *cmd, destroyServiceCli
     delete pcli;
 }
 
-void createServiceServer(SScriptCallBack *p, const char *cmd, createServiceServer_in *in, createServiceServer_out *out)
+void serviceServerCreate(SScriptCallBack *p, const char *cmd, serviceServerCreate_in *in, serviceServerCreate_out *out)
 {
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     if(!pnode)
@@ -299,7 +299,7 @@ void createServiceServer(SScriptCallBack *p, const char *cmd, createServiceServe
     handles.insert(meta->handle);
 }
 
-void destroyServiceServer(SScriptCallBack *p, const char *cmd, destroyServiceServer_in *in, destroyServiceServer_out *out)
+void serviceServerDestroy(SScriptCallBack *p, const char *cmd, serviceServerDestroy_in *in, serviceServerDestroy_out *out)
 {
     auto *psrv = Handle<ServiceServer>::obj(in->handle);
     if(!psrv)
@@ -312,7 +312,7 @@ void destroyServiceServer(SScriptCallBack *p, const char *cmd, destroyServiceSer
     delete psrv;
 }
 
-void setCompression(SScriptCallBack *p, const char *cmd, setCompression_in *in, setCompression_out *out)
+void socketSetCompression(SScriptCallBack *p, const char *cmd, socketSetCompression_in *in, socketSetCompression_out *out)
 {
     auto *psock = Handle<Socket>::obj(in->handle);
     if(!psock)
@@ -320,7 +320,7 @@ void setCompression(SScriptCallBack *p, const char *cmd, setCompression_in *in, 
     psock->setCompression(in->compressionAlgorithm, in->compressionLevel);
 }
 
-void setSocketOption(SScriptCallBack *p, const char *cmd, setSocketOption_in *in, setSocketOption_out *out)
+void socketSetOption(SScriptCallBack *p, const char *cmd, socketSetOption_in *in, socketSetOption_out *out)
 {
     auto *psock = Handle<Socket>::obj(in->handle);
     if(!psock)
