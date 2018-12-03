@@ -223,7 +223,7 @@ void createSubscriber(SScriptCallBack *p, const char *cmd, createSubscriber_in *
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     if(!pnode)
         throw std::runtime_error("Invalid node handle");
-    auto callback = boost::bind(topicCallbackWrapper, p->scriptID, in->callback, _1);
+    Subscriber::CallbackRaw callback = boost::bind(topicCallbackWrapper, p->scriptID, in->callback, _1);
     auto *psub = new Subscriber(pnode, in->topic, callback, in->managed, in->notifyGraph);
 
     auto *meta = new Metadata;
@@ -288,7 +288,7 @@ void createServiceServer(SScriptCallBack *p, const char *cmd, createServiceServe
     auto *pnode = Handle<Node>::obj(in->nodeHandle);
     if(!pnode)
         throw std::runtime_error("Invalid node handle");
-    auto callback = boost::bind(serviceCallbackWrapper, p->scriptID, in->callback, _1, _2);
+    ServiceServer::CallbackRaw callback = boost::bind(serviceCallbackWrapper, p->scriptID, in->callback, _1, _2);
     auto *psrv = new ServiceServer(pnode, in->service, callback, in->managed, in->notifyGraph);
 
     auto *meta = new Metadata;
