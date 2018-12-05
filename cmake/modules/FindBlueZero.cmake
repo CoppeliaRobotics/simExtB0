@@ -1,8 +1,13 @@
 cmake_minimum_required(VERSION 2.8.12)
 include(CMakeParseArguments)
 
-set(BLUEZERO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../bluezero" CACHE STRING "BlueZero directory")
-file(TO_CMAKE_PATH "${BLUEZERO_DIR}" BLUEZERO_DIR)
+if(DEFINED ENV{BLUEZERO_DIR})
+    set(BLUEZERO_DIR_DEFAULT $ENV{BLUEZERO_DIR})
+elseif(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../bluezero")
+    set(BLUEZERO_DIR_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/../bluezero")
+endif()
+file(TO_CMAKE_PATH "${BLUEZERO_DIR_DEFAULT}" BLUEZERO_DIR_DEFAULT)
+set(BLUEZERO_DIR "${BLUEZERO_DIR_DEFAULT}" CACHE STRING "BlueZero directory")
 
 if(NOT EXISTS "${BLUEZERO_DIR}")
     message(FATAL_ERROR "BLUEZERO_DIR (${BLUEZERO_DIR}) does not contain a valid directory")
