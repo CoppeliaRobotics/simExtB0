@@ -5,7 +5,7 @@ set(BLUEZERO_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../bluezero" CACHE STRING "BlueZer
 file(TO_CMAKE_PATH "${BLUEZERO_DIR}" BLUEZERO_DIR)
 
 if(NOT EXISTS "${BLUEZERO_DIR}")
-    message(FATAL_ERROR "BLUEZERO_DIR does not contain a valid directory")
+    message(FATAL_ERROR "BLUEZERO_DIR (${BLUEZERO_DIR}) does not contain a valid directory")
 endif()
 
 if(EXISTS "${BLUEZERO_DIR}/build/CMakeFiles")
@@ -18,7 +18,7 @@ endif()
 set(BLUEZERO_BUILD_DIR "${BLUEZERO_BUILD_DIR_DEFAULT}" CACHE STRING "BlueZero build directory")
 
 if(NOT EXISTS "${BLUEZERO_BUILD_DIR}")
-    message(FATAL_ERROR "BLUEZERO_BUILD_DIR does not contain a valid directory")
+    message(FATAL_ERROR "BLUEZERO_BUILD_DIR (${BLUEZERO_BUILD_DIR}) does not contain a valid directory")
 endif()
 
 set(BLUEZERO_INCLUDE_SEARCH_PATHS
