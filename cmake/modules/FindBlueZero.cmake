@@ -35,9 +35,22 @@ set(BLUEZERO_INCLUDE_SEARCH_PATHS
 find_path(BLUEZERO_INCLUDE_DIR_1 b0/b0.h HINTS ${BLUEZERO_INCLUDE_SEARCH_PATHS})
 find_path(BLUEZERO_INCLUDE_DIR_2 b0/config.h HINTS ${BLUEZERO_INCLUDE_SEARCH_PATHS})
 
-find_library(BLUEZERO_LIBRARY NAMES b0 HINTS ${BLUEZERO_BUILD_DIR})
+if(WIN32)
+    set(BLUEZERO_LIBRARY_NAME b0-static)
+else()
+    set(BLUEZERO_LIBRARY_NAME b0)
+endif()
+find_library(BLUEZERO_LIBRARY NAMES ${BLUEZERO_LIBRARY_NAME} HINTS ${BLUEZERO_BUILD_DIR}/Release ${BLUEZERO_BUILD_DIR}/Debug ${BLUEZERO_BUILD_DIR})
 
-find_package(Boost 1.54 REQUIRED COMPONENTS thread system regex timer filesystem serialization)
+find_package(Boost 1.54 REQUIRED COMPONENTS thread system regex timer filesystem serialization program_options)
+if(VCPKG_TOOLCHAIN)
+    find_package(ZeroMQ CONFIG REQUIRED)
+    set(ZMQ_LIBRARY libzmq)
+else()
+    find_package(ZMQ 4.1.4 REQUIRED)
+endif()
+find_package(ZLIB)
+find_package(LZ4)
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set BLUEZERO_FOUND to TRUE
@@ -47,9 +60,17 @@ find_package_handle_standard_args(BlueZero  DEFAULT_MSG
 
 set(BLUEZERO_LIBRARIES 
     ${Boost_LIBRARIES}
+    ${ZMQ_LIBRARY}
     ${BLUEZERO_LIBRARY}
 )
+if(ZLIB_FOUND)
+    set(BLUEZERO_LIBRARIES ${BLUEZERO_LIBRARIES} ${ZLIB_LIBRARIES})
+endif()
+if(LZ4_FOUND)
+    set(BLUEZERO_LIBRARIES ${BLUEZERO_LIBRARIES} ${LZ4_LIBRARY})
+endif()
 unset(BLUEZERO_LIBRARY CACHE)
+unset(ZMQ_LIBRARY CACHE)
 set(BLUEZERO_INCLUDE_DIRS
     ${Boost_INCLUDE_DIRS}
     ${BLUEZERO_INCLUDE_DIR_1}
