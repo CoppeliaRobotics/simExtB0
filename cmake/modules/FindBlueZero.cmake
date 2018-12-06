@@ -40,17 +40,25 @@ if(WIN32)
 else()
     set(BLUEZERO_LIBRARY_NAME b0)
 endif()
-find_library(BLUEZERO_LIBRARY NAMES ${BLUEZERO_LIBRARY_NAME} HINTS ${BLUEZERO_BUILD_DIR}/Release ${BLUEZERO_BUILD_DIR}/Debug ${BLUEZERO_BUILD_DIR})
 
-find_package(Boost 1.54 REQUIRED COMPONENTS thread system regex timer filesystem serialization program_options)
-if(VCPKG_TOOLCHAIN)
-    find_package(ZeroMQ CONFIG REQUIRED)
-    set(ZMQ_LIBRARY libzmq)
-else()
-    find_package(ZMQ 4.1.4 REQUIRED)
+set(BLUEZERO_LIBRARY_SEARCH_PATHS
+    ${BLUEZERO_BUILD_DIR}/Release
+    ${BLUEZERO_BUILD_DIR}/Debug
+    ${BLUEZERO_BUILD_DIR}
+)
+find_library(BLUEZERO_LIBRARY NAMES ${BLUEZERO_LIBRARY_NAME} HINTS ${BLUEZERO_LIBRARY_SEARCH_PATHS})
+
+if(WIN32)
+    find_package(Boost 1.54 REQUIRED COMPONENTS thread system regex timer filesystem serialization program_options)
+    if(VCPKG_TOOLCHAIN)
+        find_package(ZeroMQ CONFIG REQUIRED)
+        set(ZMQ_LIBRARY libzmq)
+    else()
+        find_package(ZMQ 4.1.4 REQUIRED)
+    endif()
+    find_package(ZLIB)
+    find_package(LZ4)
 endif()
-find_package(ZLIB)
-find_package(LZ4)
 
 include(FindPackageHandleStandardArgs)
 # handle the QUIETLY and REQUIRED arguments and set BLUEZERO_FOUND to TRUE
@@ -58,17 +66,22 @@ include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(BlueZero  DEFAULT_MSG
     BLUEZERO_LIBRARY BLUEZERO_INCLUDE_DIR_1 BLUEZERO_INCLUDE_DIR_2)
 
-set(BLUEZERO_LIBRARIES 
-    ${Boost_LIBRARIES}
-    ${ZMQ_LIBRARY}
-    ${BLUEZERO_LIBRARY}
-)
-if(ZLIB_FOUND)
-    set(BLUEZERO_LIBRARIES ${BLUEZERO_LIBRARIES} ${ZLIB_LIBRARIES})
+if(WIN32)
+    set(BLUEZERO_LIBRARIES
+        ${Boost_LIBRARIES}
+        ${ZMQ_LIBRARY}
+        ${BLUEZERO_LIBRARY}
+    )
+    if(ZLIB_FOUND)
+        set(BLUEZERO_LIBRARIES ${BLUEZERO_LIBRARIES} ${ZLIB_LIBRARIES})
+    endif()
+    if(LZ4_FOUND)
+        set(BLUEZERO_LIBRARIES ${BLUEZERO_LIBRARIES} ${LZ4_LIBRARY})
+    endif()
+else()
+    set(BLUEZERO_LIBRARIES ${Boost_LIBRARIES} ${BLUEZERO_LIBRARY})
 endif()
-if(LZ4_FOUND)
-    set(BLUEZERO_LIBRARIES ${BLUEZERO_LIBRARIES} ${LZ4_LIBRARY})
-endif()
+
 unset(BLUEZERO_LIBRARY CACHE)
 unset(ZMQ_LIBRARY CACHE)
 set(BLUEZERO_INCLUDE_DIRS
