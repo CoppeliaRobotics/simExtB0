@@ -15,6 +15,10 @@ if(WIN32)
     add_definitions(-DNOMINMAX)
 endif()
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0.0)
+    add_compile_options(-fpermissive)
+endif()
+
 find_package(Boost REQUIRED COMPONENTS thread system regex filesystem)
 
 set(CMAKE_MODULE_PATH
