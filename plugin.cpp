@@ -8,8 +8,8 @@
 #include <boost/regex.hpp>
 #include <boost/bind.hpp>
 #include <boost/algorithm/string/predicate.hpp>
-#include "v_repPlusPlus/Plugin.h"
-#include "v_repPlusPlus/Handle.h"
+#include "simPlusPlus/Plugin.h"
+#include "simPlusPlus/Handle.h"
 #include "plugin.h"
 #include "stubs.h"
 #include "config.h"
@@ -21,7 +21,7 @@
 
 std::set<std::string> handles;
 
-using vrep::Handle;
+using sim::Handle;
 
 using Node = b0::Node;
 using Socket = b0::Socket;
@@ -346,7 +346,7 @@ void getHandles(SScriptCallBack *p, const char *cmd, getHandles_in *in, getHandl
         out->handles.push_back(handle);
 }
 
-class Plugin : public vrep::Plugin
+class Plugin : public sim::Plugin
 {
 public:
     void onStart()
@@ -362,4 +362,4 @@ public:
     }
 };
 
-VREP_PLUGIN(PLUGIN_NAME, PLUGIN_VERSION, Plugin)
+SIM_PLUGIN(PLUGIN_NAME, PLUGIN_VERSION, Plugin)

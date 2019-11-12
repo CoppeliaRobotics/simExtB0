@@ -2,7 +2,7 @@
 <?xml-stylesheet type="text/xsl" href="callbacks.xsl"?>
 
 <plugin name="BlueZero" short-name="B0" author="federico.ferri.it@gmail.com">
-    <description>BlueZero plugin for V-REP.</description>
+    <description>BlueZero plugin</description>
     <command name="nodeCreate">
         <description>Create a new node.</description>
         <categories>
