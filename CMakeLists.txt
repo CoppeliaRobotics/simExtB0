@@ -52,3 +52,5 @@ add_library(simExtBlueZero
 )
 target_link_libraries(simExtBlueZero ${Boost_LIBRARIES} ${COPPELIASIM_LIBRARIES} ${BLUEZERO_LIBRARIES})
 
+install(TARGETS simExtBlueZero DESTINATION ${COPPELIASIM_PLUGINS_DIR})
+
