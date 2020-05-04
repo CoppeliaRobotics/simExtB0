@@ -354,8 +354,8 @@ public:
         if(!registerScriptStuff())
             throw std::runtime_error("failed to register script stuff");
 
-        simSetModuleInfo(PLUGIN_NAME, 0, "BlueZero Interface Plugin", 0);
-        simSetModuleInfo(PLUGIN_NAME, 1, BUILD_DATE, 0);
+        setExtVersion("BlueZero Interface Plugin");
+        setBuildDate(BUILD_DATE);
 
         if (!b0::isInitialized())
             b0::init();
