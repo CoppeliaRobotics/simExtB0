@@ -14,7 +14,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="string" default="">
+            <param name="handle" type="string">
                 <description>a handle to the new node</description>
             </param>
         </return>
@@ -202,7 +202,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="string" default="-1">
+            <param name="handle" type="string">
                 <description>a handle to the new publisher</description>
             </param>
         </return>
@@ -259,7 +259,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="string" default="">
+            <param name="handle" type="string">
                 <description>a handle to the new subscriber</description>
             </param>
         </return>
@@ -297,7 +297,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="string" default="">
+            <param name="handle" type="string">
                 <description>a handle to the new service client</description>
             </param>
         </return>
@@ -357,7 +357,7 @@
             </param>
         </params>
         <return>
-            <param name="handle" type="string" default="">
+            <param name="handle" type="string">
                 <description>a handle to the new service server</description>
             </param>
         </return>
