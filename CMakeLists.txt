@@ -18,7 +18,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_L
     add_compile_options(-fpermissive)
 endif()
 
-find_package(Boost REQUIRED COMPONENTS thread system regex filesystem)
+find_package(Boost REQUIRED COMPONENTS thread system filesystem)
 
 if(NOT LIBPLUGIN_DIR)
     if(DEFINED ENV{COPPELIASIM_ROOT_DIR})
@@ -34,22 +34,13 @@ set(CMAKE_MODULE_PATH
 find_package(CoppeliaSim 4.1.0.0 REQUIRED)
 find_package(BlueZero REQUIRED)
 
-include_directories(${COPPELIASIM_INCLUDE_DIR})
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/generated)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/external)
-include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${BLUEZERO_INCLUDE_DIRS})
 
 coppeliasim_generate_stubs(${CMAKE_CURRENT_BINARY_DIR}/generated XML_FILE ${CMAKE_CURRENT_SOURCE_DIR}/callbacks.xml LUA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/simExtBlueZero.lua)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-add_library(simExtBlueZero
-    SHARED
-    plugin.cpp
-    ${COPPELIASIM_EXPORTED_SOURCES}
-)
-target_link_libraries(simExtBlueZero ${Boost_LIBRARIES} ${COPPELIASIM_LIBRARIES} ${BLUEZERO_LIBRARIES})
-
-install(TARGETS simExtBlueZero DESTINATION ${COPPELIASIM_PLUGINS_DIR})
-
+coppeliasim_add_plugin(simExtBlueZero SOURCES plugin.cpp)
+target_link_libraries(simExtBlueZero ${BLUEZERO_LIBRARIES})
