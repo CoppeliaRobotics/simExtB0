@@ -350,7 +350,7 @@ public:
         else if(in->option == "conflate") psock->setConflate(v);
         else if(in->option == "readHWM") psock->setReadHWM(v);
         else if(in->option == "writeHWM") psock->setWriteHWM(v);
-        else throw (boost::format("invalid option: '%s'") % in->option).str();
+        else throw sim::exception("invalid option: '%s'", in->option);
     }
 
     void getHandles(getHandles_in *in, getHandles_out *out)
