@@ -43,3 +43,10 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DI
 
 coppeliasim_add_plugin(simExtBlueZero SOURCES plugin.cpp)
 target_link_libraries(simExtBlueZero ${BLUEZERO_LIBRARIES})
+
+if(WIN32)
+    find_package(LZ4)
+    if(LZ4_FOUND)
+        target_link_libraries(simExtBlueZero lz4::lz4)
+    endif()
+endif()
