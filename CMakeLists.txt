@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.11)
-project(simExtBlueZero)
+project(simExtB0)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_MACOSX_RPATH 1)
@@ -41,12 +41,12 @@ coppeliasim_generate_stubs(${CMAKE_CURRENT_BINARY_DIR}/generated XML_FILE ${CMAK
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
-coppeliasim_add_plugin(simExtBlueZero SOURCES plugin.cpp)
-target_link_libraries(simExtBlueZero ${BLUEZERO_LIBRARIES})
+coppeliasim_add_plugin(simExtB0 SOURCES plugin.cpp)
+target_link_libraries(simExtB0 ${BLUEZERO_LIBRARIES})
 
 if(WIN32)
     find_package(LZ4)
     if(LZ4_FOUND)
-        target_link_libraries(simExtBlueZero lz4::lz4)
+        target_link_libraries(simExtB0 lz4::lz4)
     endif()
 endif()

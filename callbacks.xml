@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <?xml-stylesheet type="text/xsl" href="callbacks.xsl"?>
 
-<plugin name="BlueZero" short-name="B0" author="federico.ferri.it@gmail.com">
+<plugin name="B0" short-name="B0" author="federico.ferri.it@gmail.com">
     <description>BlueZero plugin</description>
     <command name="nodeCreate">
         <description>Create a new node.</description>
