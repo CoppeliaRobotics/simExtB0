@@ -1,6 +1,6 @@
 local simB0={}
 
---@fun spin Call nodeSpinOnce() continuously
+--@fun nodeSpin Call nodeSpinOnce() continuously
 --@arg string handle the node handle
 function simB0.nodeSpin(handle)
     while sim.getSimulationState()~=sim.simulation_advancing_abouttostop do
