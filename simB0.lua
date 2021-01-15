@@ -10,6 +10,7 @@ function simB0.nodeSpin(handle)
 end
 
 --@fun pingResolver Check if resolver node is reachable
+--@ret bool running true if the resolver node is running and reachable
 function simB0.pingResolver()
     local dummyNode=simB0.nodeCreate('dummyNode')
     simB0.nodeSetAnnounceTimeout(dummyNode, 2000) -- 2 seconds timeout
