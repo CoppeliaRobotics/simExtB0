@@ -16,6 +16,7 @@
 #include <b0/service_server.h>
 
 using sim::Handle;
+using sim::Handles;
 
 using Node = b0::Node;
 using Socket = b0::Socket;
@@ -29,19 +30,6 @@ template<> std::string Handle<Publisher>::tag() { return "b0.pub"; }
 template<> std::string Handle<Subscriber>::tag() { return "b0.sub"; }
 template<> std::string Handle<ServiceClient>::tag() { return "b0.cli"; }
 template<> std::string Handle<ServiceServer>::tag() { return "b0.srv"; }
-
-template<> Socket * Handle<Socket>::obj(std::string h)
-{
-    auto *ppub = Handle<Publisher>::obj(h);
-    if(ppub) return ppub;
-    auto *psub = Handle<Subscriber>::obj(h);
-    if(psub) return psub;
-    auto *pcli = Handle<ServiceClient>::obj(h);
-    if(pcli) return pcli;
-    auto *psrv = Handle<ServiceServer>::obj(h);
-    if(psrv) return psrv;
-    return nullptr;
-}
 
 struct Metadata
 {
@@ -68,6 +56,20 @@ public:
             b0::init();
     }
 
+    void onScriptStateDestroyed(int scriptID)
+    {
+        for(auto obj : nodeHandles.find(scriptID))
+            delete nodeHandles.remove(obj);
+        for(auto obj : publisherHandles.find(scriptID))
+            delete publisherHandles.remove(obj);
+        for(auto obj : subscriberHandles.find(scriptID))
+            delete subscriberHandles.remove(obj);
+        for(auto obj : serviceClientHandles.find(scriptID))
+            delete serviceClientHandles.remove(obj);
+        for(auto obj : serviceServerHandles.find(scriptID))
+            delete serviceServerHandles.remove(obj);
+    }
+
     void topicCallbackWrapper(int scriptID, std::string callback, const std::string &payload)
     {
         topicCallback_in in;
@@ -90,252 +92,196 @@ public:
         auto *pnode = new Node(in->name);
 
         auto *meta = new Metadata;
-        meta->handle = Handle<Node>::str(pnode);
+        meta->handle = nodeHandles.add(pnode, in->_scriptID);
         pnode->setUserData(meta);
 
         out->handle = meta->handle;
-        handles.insert(meta->handle);
     }
 
     void nodeSetAnnounceTimeout(nodeSetAnnounceTimeout_in *in, nodeSetAnnounceTimeout_out *out)
     {
-        auto *pnode = Handle<Node>::obj(in->handle);
-        if(!pnode)
-            throw std::runtime_error("Invalid node handle");
+        auto *pnode = nodeHandles.get(in->handle);
         pnode->setAnnounceTimeout(in->timeout);
     }
 
     void nodeInit(nodeInit_in *in, nodeInit_out *out)
     {
-        auto *pnode = Handle<Node>::obj(in->handle);
-        if(!pnode)
-            throw std::runtime_error("Invalid node handle");
+        auto *pnode = nodeHandles.get(in->handle);
         pnode->init();
         out->name = pnode->getName();
     }
 
     void nodeSpinOnce(nodeSpinOnce_in *in, nodeSpinOnce_out *out)
     {
-        auto *pnode = Handle<Node>::obj(in->handle);
-        if(!pnode)
-            throw std::runtime_error("Invalid node handle");
+        auto *pnode = nodeHandles.get(in->handle);
         pnode->spinOnce();
     }
 
     void nodeCleanup(nodeCleanup_in *in, nodeCleanup_out *out)
     {
-        auto *pnode = Handle<Node>::obj(in->handle);
-        if(!pnode)
-            throw std::runtime_error("Invalid node handle");
+        auto *pnode = nodeHandles.get(in->handle);
         pnode->cleanup();
     }
 
     void nodeDestroy(nodeDestroy_in *in, nodeDestroy_out *out)
     {
-        auto *pnode = Handle<Node>::obj(in->handle);
-        if(!pnode)
-            throw std::runtime_error("Invalid node handle");
+        auto *pnode = nodeHandles.get(in->handle);
 
         auto *meta = Metadata::get(pnode);
-        handles.erase(meta->handle);
         delete meta;
 
-        delete pnode;
+        delete nodeHandles.remove(pnode);
     }
 
     void socketInit(socketInit_in *in, socketInit_out *out)
     {
-        auto *psock = Handle<Socket>::obj(in->handle);
-        if(!psock)
-            throw std::runtime_error("Invalid socket handle");
+        auto *psock = getSocket(in->handle);
         psock->init();
     }
 
     void socketSpinOnce(socketSpinOnce_in *in, socketSpinOnce_out *out)
     {
-        auto *psock = Handle<Socket>::obj(in->handle);
-        if(!psock)
-            throw std::runtime_error("Invalid socket handle");
+        auto *psock = getSocket(in->handle);
         psock->spinOnce();
     }
 
     void socketPoll(socketPoll_in *in, socketPoll_out *out)
     {
-        auto *psock = Handle<Socket>::obj(in->handle);
-        if(!psock)
-            throw std::runtime_error("Invalid socket handle");
+        auto *psock = getSocket(in->handle);
         out->result = psock->poll();
     }
 
     void socketRead(socketRead_in *in, socketRead_out *out)
     {
-        auto *psock = Handle<Socket>::obj(in->handle);
-        if(!psock)
-            throw std::runtime_error("Invalid socket handle");
+        auto *psock = getSocket(in->handle);
         psock->readRaw(out->payload);
     }
 
     void socketWrite(socketWrite_in *in, socketWrite_out *out)
     {
-        auto *psock = Handle<Socket>::obj(in->handle);
-        if(!psock)
-            throw std::runtime_error("Invalid socket handle");
+        auto *psock = getSocket(in->handle);
         psock->writeRaw(in->payload);
     }
 
     void socketCleanup(socketCleanup_in *in, socketCleanup_out *out)
     {
-        auto *psock = Handle<Socket>::obj(in->handle);
-        if(!psock)
-            throw std::runtime_error("Invalid socket handle");
+        auto *psock = getSocket(in->handle);
         psock->cleanup();
     }
 
     void publisherCreate(publisherCreate_in *in, publisherCreate_out *out)
     {
-        auto *pnode = Handle<Node>::obj(in->nodeHandle);
-        if(!pnode)
-            throw std::runtime_error("Invalid node handle");
+        auto *pnode = nodeHandles.get(in->nodeHandle);
         auto *ppub = new Publisher(pnode, in->topic, in->managed, in->notifyGraph);
 
         auto *meta = new Metadata;
-        meta->handle = Handle<Publisher>::str(ppub);
+        meta->handle = publisherHandles.add(ppub, in->_scriptID);
         ppub->setUserData(meta);
 
         out->handle = meta->handle;
-        handles.insert(meta->handle);
     }
 
     void publisherPublish(publisherPublish_in *in, publisherPublish_out *out)
     {
-        auto *ppub = Handle<Publisher>::obj(in->handle);
-        if(!ppub)
-            throw std::runtime_error("Invalid publisher handle");
+        auto *ppub = publisherHandles.get(in->handle);
         ppub->publish(in->payload);
     }
 
     void publisherDestroy(publisherDestroy_in *in, publisherDestroy_out *out)
     {
-        auto *ppub = Handle<Publisher>::obj(in->handle);
-        if(!ppub)
-            throw std::runtime_error("Invalid publisher handle");
+        auto *ppub = publisherHandles.get(in->handle);
 
         auto *meta = Metadata::get(ppub);
-        handles.erase(meta->handle);
         delete meta;
 
-        delete ppub;
+        delete publisherHandles.remove(ppub);
     }
 
     void subscriberCreate(subscriberCreate_in *in, subscriberCreate_out *out)
     {
-        auto *pnode = Handle<Node>::obj(in->nodeHandle);
-        if(!pnode)
-            throw std::runtime_error("Invalid node handle");
+        auto *pnode = nodeHandles.get(in->nodeHandle);
 
         Subscriber::CallbackRaw callback = boost::bind(&Plugin::topicCallbackWrapper, this, in->_scriptID, in->callback, _1);
         auto *psub = new Subscriber(pnode, in->topic, callback, in->managed, in->notifyGraph);
 
         auto *meta = new Metadata;
-        meta->handle = Handle<Subscriber>::str(psub);
+        meta->handle = subscriberHandles.add(psub, in->_scriptID);
         psub->setUserData(meta);
 
         out->handle = meta->handle;
-        handles.insert(meta->handle);
     }
 
     void subscriberDestroy(subscriberDestroy_in *in, subscriberDestroy_out *out)
     {
-        auto *psub = Handle<Subscriber>::obj(in->handle);
-        if(!psub)
-            throw std::runtime_error("Invalid subscriber handle");
+        auto *psub = subscriberHandles.get(in->handle);
 
         auto *meta = Metadata::get(psub);
-        handles.erase(meta->handle);
         delete meta;
 
-        delete psub;
+        delete subscriberHandles.remove(psub);
     }
 
     void serviceClientCreate(serviceClientCreate_in *in, serviceClientCreate_out *out)
     {
-        auto *pnode = Handle<Node>::obj(in->nodeHandle);
-        if(!pnode)
-            throw std::runtime_error("Invalid node handle");
+        auto *pnode = nodeHandles.get(in->nodeHandle);
         auto *pcli = new ServiceClient(pnode, in->service, in->managed, in->notifyGraph);
 
         auto *meta = new Metadata;
-        meta->handle = Handle<ServiceClient>::str(pcli);
+        meta->handle = serviceClientHandles.add(pcli, in->_scriptID);
         pcli->setUserData(meta);
 
         out->handle = meta->handle;
-        handles.insert(meta->handle);
     }
 
     void serviceClientCall(serviceClientCall_in *in, serviceClientCall_out *out)
     {
-        auto *pcli = Handle<ServiceClient>::obj(in->handle);
-        if(!pcli)
-            throw std::runtime_error("Invalid service client handle");
+        auto *pcli = serviceClientHandles.get(in->handle);
         pcli->call(in->payload, out->payload);
     }
 
     void serviceClientDestroy(serviceClientDestroy_in *in, serviceClientDestroy_out *out)
     {
-        auto *pcli = Handle<ServiceClient>::obj(in->handle);
-        if(!pcli)
-            throw std::runtime_error("Invalid service client handle");
+        auto *pcli = serviceClientHandles.get(in->handle);
 
         auto *meta = Metadata::get(pcli);
-        handles.erase(meta->handle);
         delete meta;
 
-        delete pcli;
+        delete serviceClientHandles.remove(pcli);
     }
 
     void serviceServerCreate(serviceServerCreate_in *in, serviceServerCreate_out *out)
     {
-        auto *pnode = Handle<Node>::obj(in->nodeHandle);
-        if(!pnode)
-            throw std::runtime_error("Invalid node handle");
+        auto *pnode = nodeHandles.get(in->nodeHandle);
 
         ServiceServer::CallbackRaw callback = boost::bind(&Plugin::serviceCallbackWrapper, this, in->_scriptID, in->callback, _1, _2);
         auto *psrv = new ServiceServer(pnode, in->service, callback, in->managed, in->notifyGraph);
 
         auto *meta = new Metadata;
-        meta->handle = Handle<ServiceServer>::str(psrv);
+        meta->handle = serviceServerHandles.add(psrv, in->_scriptID);
         psrv->setUserData(meta);
 
         out->handle = meta->handle;
-        handles.insert(meta->handle);
     }
 
     void serviceServerDestroy(serviceServerDestroy_in *in, serviceServerDestroy_out *out)
     {
-        auto *psrv = Handle<ServiceServer>::obj(in->handle);
-        if(!psrv)
-            throw std::runtime_error("Invalid service server handle");
+        auto *psrv = serviceServerHandles.get(in->handle);
 
         auto *meta = Metadata::get(psrv);
-        handles.erase(meta->handle);
         delete meta;
 
-        delete psrv;
+        delete serviceServerHandles.remove(psrv);
     }
 
     void socketSetCompression(socketSetCompression_in *in, socketSetCompression_out *out)
     {
-        auto *psock = Handle<Socket>::obj(in->handle);
-        if(!psock)
-            throw std::runtime_error("Invalid socket handle");
+        auto *psock = getSocket(in->handle);
         psock->setCompression(in->compressionAlgorithm, in->compressionLevel);
     }
 
     void socketSetOption(socketSetOption_in *in, socketSetOption_out *out)
     {
-        auto *psock = Handle<Socket>::obj(in->handle);
-        if(!psock)
-            throw std::runtime_error("Invalid socket handle");
+        auto *psock = getSocket(in->handle);
 
         int v = in->value;
         if(in->option == "lingerPeriod") psock->setLingerPeriod(v);
@@ -351,12 +297,37 @@ public:
 
     void getHandles(getHandles_in *in, getHandles_out *out)
     {
-        for(const std::string &handle : handles)
-            out->handles.push_back(handle);
+        for(const auto &x : nodeHandles.find(in->_scriptID))
+            out->handles.push_back(Handle<Node>::str(x));
+        for(const auto &x : publisherHandles.find(in->_scriptID))
+            out->handles.push_back(Handle<Publisher>::str(x));
+        for(const auto &x : subscriberHandles.find(in->_scriptID))
+            out->handles.push_back(Handle<Subscriber>::str(x));
+        for(const auto &x : serviceClientHandles.find(in->_scriptID))
+            out->handles.push_back(Handle<ServiceClient>::str(x));
+        for(const auto &x : serviceServerHandles.find(in->_scriptID))
+            out->handles.push_back(Handle<ServiceServer>::str(x));
+    }
+
+    Socket * getSocket(std::string h)
+    {
+        auto *ppub = Handle<Publisher>::obj(h);
+        if(ppub) return publisherHandles.get(h);
+        auto *psub = Handle<Subscriber>::obj(h);
+        if(psub) return subscriberHandles.get(h);
+        auto *pcli = Handle<ServiceClient>::obj(h);
+        if(pcli) return serviceClientHandles.get(h);
+        auto *psrv = Handle<ServiceServer>::obj(h);
+        if(psrv) return serviceServerHandles.get(h);
+        throw sim::exception("invalid handle: '%s'", h);
     }
 
 private:
-    std::set<std::string> handles;
+    Handles<Node> nodeHandles;
+    Handles<Publisher> publisherHandles;
+    Handles<Subscriber> subscriberHandles;
+    Handles<ServiceClient> serviceClientHandles;
+    Handles<ServiceServer> serviceServerHandles;
 };
 
 SIM_PLUGIN(PLUGIN_NAME, PLUGIN_VERSION, Plugin)
