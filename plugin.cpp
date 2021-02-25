@@ -64,7 +64,7 @@ public:
         setExtVersion("BlueZero Interface Plugin");
         setBuildDate(BUILD_DATE);
 
-        if (!b0::isInitialized())
+        if(!b0::isInitialized())
             b0::init();
     }
 
