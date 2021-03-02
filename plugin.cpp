@@ -92,7 +92,7 @@ public:
         auto *pnode = new Node(in->name);
 
         auto *meta = new Metadata;
-        meta->handle = nodeHandles.add(pnode, in->_scriptID);
+        meta->handle = nodeHandles.add(pnode, in->_.scriptID);
         pnode->setUserData(meta);
 
         out->handle = meta->handle;
@@ -175,7 +175,7 @@ public:
         auto *ppub = new Publisher(pnode, in->topic, in->managed, in->notifyGraph);
 
         auto *meta = new Metadata;
-        meta->handle = publisherHandles.add(ppub, in->_scriptID);
+        meta->handle = publisherHandles.add(ppub, in->_.scriptID);
         ppub->setUserData(meta);
 
         out->handle = meta->handle;
@@ -201,11 +201,11 @@ public:
     {
         auto *pnode = nodeHandles.get(in->nodeHandle);
 
-        Subscriber::CallbackRaw callback = boost::bind(&Plugin::topicCallbackWrapper, this, in->_scriptID, in->callback, _1);
+        Subscriber::CallbackRaw callback = boost::bind(&Plugin::topicCallbackWrapper, this, in->_.scriptID, in->callback, _1);
         auto *psub = new Subscriber(pnode, in->topic, callback, in->managed, in->notifyGraph);
 
         auto *meta = new Metadata;
-        meta->handle = subscriberHandles.add(psub, in->_scriptID);
+        meta->handle = subscriberHandles.add(psub, in->_.scriptID);
         psub->setUserData(meta);
 
         out->handle = meta->handle;
@@ -227,7 +227,7 @@ public:
         auto *pcli = new ServiceClient(pnode, in->service, in->managed, in->notifyGraph);
 
         auto *meta = new Metadata;
-        meta->handle = serviceClientHandles.add(pcli, in->_scriptID);
+        meta->handle = serviceClientHandles.add(pcli, in->_.scriptID);
         pcli->setUserData(meta);
 
         out->handle = meta->handle;
@@ -253,11 +253,11 @@ public:
     {
         auto *pnode = nodeHandles.get(in->nodeHandle);
 
-        ServiceServer::CallbackRaw callback = boost::bind(&Plugin::serviceCallbackWrapper, this, in->_scriptID, in->callback, _1, _2);
+        ServiceServer::CallbackRaw callback = boost::bind(&Plugin::serviceCallbackWrapper, this, in->_.scriptID, in->callback, _1, _2);
         auto *psrv = new ServiceServer(pnode, in->service, callback, in->managed, in->notifyGraph);
 
         auto *meta = new Metadata;
-        meta->handle = serviceServerHandles.add(psrv, in->_scriptID);
+        meta->handle = serviceServerHandles.add(psrv, in->_.scriptID);
         psrv->setUserData(meta);
 
         out->handle = meta->handle;
@@ -297,15 +297,15 @@ public:
 
     void getHandles(getHandles_in *in, getHandles_out *out)
     {
-        for(const auto &x : nodeHandles.find(in->_scriptID))
+        for(const auto &x : nodeHandles.find(in->_.scriptID))
             out->handles.push_back(Handle<Node>::str(x));
-        for(const auto &x : publisherHandles.find(in->_scriptID))
+        for(const auto &x : publisherHandles.find(in->_.scriptID))
             out->handles.push_back(Handle<Publisher>::str(x));
-        for(const auto &x : subscriberHandles.find(in->_scriptID))
+        for(const auto &x : subscriberHandles.find(in->_.scriptID))
             out->handles.push_back(Handle<Subscriber>::str(x));
-        for(const auto &x : serviceClientHandles.find(in->_scriptID))
+        for(const auto &x : serviceClientHandles.find(in->_.scriptID))
             out->handles.push_back(Handle<ServiceClient>::str(x));
-        for(const auto &x : serviceServerHandles.find(in->_scriptID))
+        for(const auto &x : serviceServerHandles.find(in->_.scriptID))
             out->handles.push_back(Handle<ServiceServer>::str(x));
     }
 
